@@ -7,7 +7,8 @@ des deux. Il parle directement au Pegasus en BLE et à lichess par son API Board
 **Aucun sudo, aucun périphérique à créer, aucun LiveChess.** Tu poses tes pièces,
 tu joues, les cases du coup adverse s'allument, les pendules tournent.
 
-![L'interface pendant une partie](apercu_interface.png)
+<img width="882" height="724" alt="image" src="https://github.com/user-attachments/assets/e3ccffcb-0992-4c54-8bd9-5023e3c69f05" />
+
 
 ---
 
