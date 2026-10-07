@@ -1,0 +1,5 @@
+[console_scripts]
+pegasus-bridge = pegasus_bridge:main
+
+[gui_scripts]
+pegasus-gui = pegasus_gui:main

@@ -1,0 +1,19 @@
+[build-system]
+requires = ["setuptools>=64"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pegasus-chess"
+version = "1.0.0"
+description = "Pont DGT Pegasus (BLE) vers lichess, avec interface graphique"
+requires-python = ">=3.9"
+dependencies = ["bleak>=0.21", "chess>=1.10"]
+
+[project.scripts]
+pegasus-bridge = "pegasus_bridge:main"
+
+[project.gui-scripts]
+pegasus-gui = "pegasus_gui:main"
+
+[tool.setuptools]
+py-modules = ["pegasus_bridge", "pegasus_gui"]

@@ -1,0 +1,9 @@
+pegasus_bridge.py
+pegasus_gui.py
+pyproject.toml
+pegasus_chess.egg-info/PKG-INFO
+pegasus_chess.egg-info/SOURCES.txt
+pegasus_chess.egg-info/dependency_links.txt
+pegasus_chess.egg-info/entry_points.txt
+pegasus_chess.egg-info/requires.txt
+pegasus_chess.egg-info/top_level.txt

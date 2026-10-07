@@ -1,0 +1,7 @@
+Metadata-Version: 2.4
+Name: pegasus-chess
+Version: 1.0.0
+Summary: Pont DGT Pegasus (BLE) vers lichess, avec interface graphique
+Requires-Python: >=3.9
+Requires-Dist: bleak>=0.21
+Requires-Dist: chess>=1.10

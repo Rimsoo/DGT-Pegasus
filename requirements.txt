@@ -1,0 +1,8 @@
+# Ce fichier n'est pas utilise par build-appimage.sh : le script en genere un
+# a la volee dans un dossier temporaire, contenant le chemin ABSOLU du projet.
+# python-appimage lance « pip install » depuis son propre dossier de travail,
+# et un chemin relatif y designerait le mauvais repertoire.
+#
+# Il reste ici pour installer les dependances a la main au besoin :
+bleak>=0.21
+chess>=1.10

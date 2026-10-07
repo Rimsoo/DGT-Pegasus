@@ -1,0 +1,13 @@
+[Desktop Entry]
+Type=Application
+# Attention : pas d'espace dans Name. python-appimage en fait le nom du
+# fichier AppImage et ne le protege pas en appelant appimagetool, qui
+# decoupe alors la commande sur l'espace et produit un fichier introuvable.
+Name=Pegasus
+GenericName=Echiquier DGT Pegasus vers lichess
+Comment=Jouer sur lichess avec un echiquier DGT Pegasus
+Exec=pegasus-gui
+Icon=pegasus
+Categories=Game;BoardGame;
+Terminal=false
+StartupNotify=true
