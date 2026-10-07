@@ -28,7 +28,7 @@ if [ "${APPIMAGE_ENTRY:-}" = "pegasus-bridge" ]; then
 fi
 
 case "${1:-}" in
-    scan|watch|diag|raw|probe|play|serve|-h|--help)
+    scan|watch|diag|raw|led|probe|play|serve|-h|--help)
         exec "$PY" -m pegasus_bridge "$@"
         ;;
 esac
