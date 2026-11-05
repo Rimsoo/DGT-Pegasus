@@ -1,60 +1,67 @@
-# Pegasus — jouer sur lichess avec un DGT Pegasus, sous Linux
+# Pegasus — play on lichess with a DGT Pegasus, on Linux
 
 > [!NOTE]
-> Dépôt principal : [Forgejo](https://forgejo.aaaoz.fr/Rimso/DGT-Pegasus) · Miroir : [GitHub](https://github.com/Rimsoo/DGT-Pegasus) (synchronisé automatiquement).
-> Les issues et retours sont les bienvenus sur GitHub.
+> Main repository: [Forgejo](https://forgejo.aaaoz.fr/Rimso/DGT-Pegasus) · Mirror: [GitHub](https://github.com/Rimsoo/DGT-Pegasus) (synced automatically).
+> Issues and feedback are welcome on GitHub.
 
-DGT ne fournit qu'un `.deb` de LiveChess pour Linux, et LiveChess ne voit pas un
-plateau connecté en Bluetooth : il énumère les ports série. Ce projet se passe
-des deux. Il parle directement au Pegasus en BLE et à lichess par son API Board.
+DGT only ships a LiveChess `.deb` for Linux, and LiveChess cannot see a board
+connected over Bluetooth: it enumerates serial ports. This project does without
+both. It talks to the Pegasus directly over BLE and to lichess through its
+Board API.
 
-**Aucun sudo, aucun périphérique à créer, aucun LiveChess.** Tu poses tes pièces,
-tu joues, les cases du coup adverse s'allument, les pendules tournent.
+**No sudo, no device to create, no LiveChess.** Set up your pieces, play, the
+opponent's move lights up, the clocks run.
+
+The interface and its messages come in **English and French**: pick **EN** or
+**FR** at the top right of the window, or pass `--lang en` / `--lang fr` on the
+command line. The choice is saved in `~/.config/pegasus-bridge/settings.json`;
+until you make one, it follows the system language. Below, button names are
+given in English with the French label in italics.
 
 <img width="882" height="724" alt="image" src="https://github.com/user-attachments/assets/e3ccffcb-0992-4c54-8bd9-5023e3c69f05" />
 
 
 ---
 
-## Ce que ça fait
+## What it does
 
-* **Jouer sur lichess depuis le plateau.** Les coups partent tout seuls, ceux de
-  l'adversaire s'allument sur le plateau jusqu'à ce que tu les rejoues.
-* **Lancer une partie sans toucher à l'ordinateur.** Soulève deux pièces
-  convenues et la partie démarre.
-* **Tout ce qui ne se fait pas en poussant une pièce** : abandon, nulle, reprise
-  de coup, ajout de temps — six boutons.
-* **Des animations lumineuses réglables** : début de partie, victoire, nulle,
-  pièce soulevée, coup accepté, recherche d'adversaire.
-* **Le mode LiveChess**, en annexe, pour qui y tient : le pont se fait passer
-  pour une carte DGT sur un port série (annexe A).
+* **Play on lichess from the board.** Your moves are sent automatically; your
+  opponent's moves light up on the board until you play them back.
+* **Start a game without touching the computer.** Lift two agreed-upon pieces
+  and the game starts.
+* **Everything you can't do by pushing a piece**: resign, draw, takeback, add
+  time — six buttons.
+* **Configurable light animations**: game start, win, draw, lifted piece, move
+  accepted, opponent search.
+* **LiveChess mode**, in an appendix, for those who want it: the bridge poses as
+  a DGT board on a serial port (appendix A).
 
-Trois fichiers suffisent : `pegasus_bridge.py` (le moteur et la ligne de
-commande), `pegasus_gui.py` (l'interface), `test_pegasus_bridge.py` (288
-contrôles qui tournent sans plateau).
+Three files are all it takes: `pegasus_bridge.py` (the engine and the command
+line), `pegasus_gui.py` (the interface), `test_pegasus_bridge.py` (292 checks
+that run without a board).
 
 ---
 
 ## Installation
 
-### A. L'AppImage — rien à installer
+### A. The AppImage — nothing to install
 
 ```bash
 chmod +x build-appimage.sh && ./build-appimage.sh
-./install.sh                       # ./install.sh -u pour désinstaller
+./install.sh                       # ./install.sh -u to uninstall
 ```
 
-Le premier script produit un exécutable unique qui embarque Python, `bleak`,
-`chess` et l'interface. Il télécharge une image Python manylinux, donc il lui
-faut du réseau — une seule fois. Le Bluetooth passe par le BlueZ de la machine :
-rien à embarquer, mais `bluetooth.service` doit tourner.
+The first script produces a single executable bundling Python, `bleak`, `chess`
+and the interface. It downloads a manylinux Python image, so it needs network
+access — once. Bluetooth goes through the system's BlueZ: nothing to bundle, but
+`bluetooth.service` must be running.
 
-Le second installe sans sudo : une commande `pegasus` dans `~/.local/bin`,
-l'icône dans le thème, une entrée dans le menu. Il délègue à
-[shortcut](https://github.com/Rimsoo/shortcut) s'il est dans le PATH, et fait la
-même chose à la main sinon.
+The second installs without sudo: a `pegasus` command in `~/.local/bin`, the
+icon in the theme, a menu entry. It delegates to
+[shortcut](https://github.com/Rimsoo/shortcut) if it is on the PATH, and does
+the same thing by hand otherwise.
 
-### B. Depuis les sources
+### B. From source
 
 ```bash
 sudo pacman -S --needed bluez bluez-utils python tk
@@ -64,110 +71,109 @@ python -m venv ~/.venv/pegasus
 ~/.venv/pegasus/bin/pip install bleak chess
 ```
 
-Python 3.9 ou plus. Tk fait partie de la bibliothèque standard mais est souvent
-dans un paquet à part (`tk` sur Arch, `python3-tk` sur Debian) — il n'est
-nécessaire que pour l'interface, pas pour la ligne de commande.
+Python 3.9 or later. Tk is part of the standard library but often ships in a
+separate package (`tk` on Arch, `python3-tk` on Debian) — it is only needed for
+the interface, not for the command line.
 
-Le dossier est aussi un paquet Python ordinaire :
+The folder is also a regular Python package:
 
 ```bash
-pip install .        # fournit les commandes pegasus-bridge et pegasus-gui
+pip install .        # provides the pegasus-bridge and pegasus-gui commands
 ```
 
-### Le jeton lichess
+### The lichess token
 
-Un jeton personnel avec la portée **`board:play`** :
+A personal token with the **`board:play`** scope:
 
 <https://lichess.org/account/oauth/token/create?scopes[]=board:play&description=Pegasus%20bridge>
 
-Colle-le dans l'interface et coche *retenir*, ou passe-le une fois en ligne de
-commande avec `--save-token`. Il atterrit dans
-`~/.config/pegasus-bridge/token`, en 0600.
+Paste it into the interface and tick *remember* (*retenir*), or pass it once on
+the command line with `--save-token`. It ends up in
+`~/.config/pegasus-bridge/token`, mode 0600.
 
-Ce seul jeton couvre tout : jouer, chercher un adversaire, défier l'ordinateur,
-abandonner, proposer nulle, reprendre un coup. Seul le bouton **+15 s** demande
-davantage (voir plus bas).
+That one token covers everything: playing, seeking an opponent, challenging the
+computer, resigning, offering a draw, taking back a move. Only the **+15 s**
+button needs more (see below).
 
 ---
 
-## Démarrage
+## Getting started
 
-**Avec l'interface :**
+**With the interface:**
 
 ```bash
-pegasus                              # AppImage installée
-~/.venv/pegasus/bin/python pegasus_gui.py    # depuis les sources
+pegasus                              # installed AppImage
+~/.venv/pegasus/bin/python pegasus_gui.py    # from source
 ```
 
-*Chercher* → choisis le plateau → *Connecter*. C'est tout.
+*Search* (*Chercher*) → pick the board → *Connect* (*Connecter*). That's it.
 
-**En ligne de commande :**
+**On the command line:**
 
 ```bash
 pegasus play --address XX:XX:XX:XX:XX:XX --token lip_xxxxx --save-token
-pegasus play --address XX:XX:XX:XX:XX:XX     # les fois suivantes
+pegasus play --address XX:XX:XX:XX:XX:XX     # subsequent runs
 ```
 
-Lance ensuite une partie sur lichess.org, ou depuis le plateau : elle est
-détectée et suivie toute seule. Tu peux aussi te brancher au milieu d'une partie
-en cours — le pont vérifie que la position concorde, il ne te fait pas tout
-rejouer.
+Then start a game on lichess.org, or from the board: it is detected and
+followed automatically. You can also join a game already in progress — the
+bridge checks that the position matches, it doesn't make you replay everything.
 
 ---
 
-## L'interface
+## The interface
 
-**Les pendules** occupent la droite : la tienne en bas, celle de l'adversaire
-au-dessus. Le camp au trait est en blanc, l'autre en gris, et ça passe au rouge
-sous vingt secondes. Elles s'égrènent entre deux nouvelles de lichess, y compris
-pendant ta réflexion.
+**The clocks** sit on the right: yours at the bottom, your opponent's above.
+The side to move is shown in white, the other in grey, and it turns red under
+twenty seconds. They tick down between lichess updates, including while you
+think.
 
-**Le plateau virtuel se masque tout seul au début de chaque partie** — le
-regarder gâcherait le jeu. La case *Afficher le plateau* le rappelle quand tu en
-as besoin, et se décoche à nouveau à la partie suivante. Hors partie, il montre
-la position de départ et marque en rouge ce qui manque encore : pratique pour
-remettre les pièces avant de commencer.
+**The virtual board hides itself at the start of every game** — looking at it
+would spoil the game. The *Show board* (*Afficher le plateau*) checkbox brings
+it back when you need it, and unticks itself again at the next game. Outside a
+game, it shows the starting position and marks in red what is still missing:
+handy for setting the pieces back up before you start.
 
-**La ligne de détail** donne l'adversaire, ta couleur, le nombre de demi-coups et
-le **niveau de batterie** du plateau, rafraîchi toutes les deux minutes et
-annoté « en charge » quand le câble est branché.
+**The detail line** shows the opponent, your colour, the number of half-moves
+and the board's **battery level**, refreshed every two minutes and marked
+"charging" (*en charge*) when the cable is plugged in.
 
-### Les boutons de partie
+### Game buttons
 
-Six boutons, actifs seulement pendant une partie.
+Six buttons, active only during a game.
 
-| bouton | ce qu'il fait |
+| button | what it does |
 |---|---|
-| **Nulle** | propose la nulle, ou accepte celle qu'on te propose |
-| **Reprise** | demande à reprendre un coup, ou accepte la demande adverse |
-| **+15 s** | ajoute quinze secondes à la pendule de *l'adversaire* |
-| **Abandonner** | abandonne — une confirmation est demandée |
-| **Annuler** | annule la partie, possible seulement avant le premier coup |
-| **Refuser** | refuse la proposition en cours, nulle ou reprise |
+| **Draw** (*Nulle*) | offers a draw, or accepts the one offered to you |
+| **Takeback** (*Reprise*) | asks to take back a move, or accepts the opponent's request |
+| **+15 s** | adds fifteen seconds to *the opponent's* clock |
+| **Resign** (*Abandonner*) | resigns — asks for confirmation |
+| **Abort** (*Annuler*) | aborts the game, only possible before the first move |
+| **Decline** (*Refuser*) | declines the pending offer, draw or takeback |
 
-*Nulle* et *Reprise* servent aussi bien à proposer qu'à accepter : chez lichess
-c'est la même route.
+*Draw* and *Takeback* work both for offering and accepting: on lichess it is the
+same endpoint.
 
-**+15 s** est le seul qui sorte du lot. Il passe par `/api/round/…` au lieu de
-`/api/board/…`, ce qui relève d'un autre droit. Avec un jeton `board:play` seul,
-lichess refusera, et le journal te dira d'ajouter `challenge:write`. Les cinq
-autres marchent avec le jeton habituel.
+**+15 s** is the odd one out. It goes through `/api/round/…` instead of
+`/api/board/…`, which requires a different permission. With a `board:play`-only
+token lichess will refuse, and the log will tell you to add `challenge:write`.
+The other five work with the usual token.
 
-### Lancer une partie depuis le plateau
+### Starting a game from the board
 
-Hors partie, plateau garni de la position de départ : soulève deux pièces
-convenues, garde-les levées une seconde, la partie se lance. Pendant la
-recherche, **une lumière tourne au centre du plateau**. Reposer les pièces
-annule — l'API de lichess garde la recherche active tant que la connexion vit,
-la fermer l'annule.
+Outside a game, with the board set up in the starting position: lift two
+agreed-upon pieces, hold them up for a second, and the game starts. While
+seeking, **a light circles in the middle of the board**. Putting the pieces back
+cancels — lichess's API keeps the seek active as long as the connection is
+alive, and closing it cancels the seek.
 
-Le bouton **Modifier les gestes** ouvre un éditeur : liste à gauche, formulaire à
-droite, avec les cases à lever, la cadence, le type de partie et la couleur. Il
-refuse deux gestes sur les mêmes cases. Les gestes sont relus au démarrage du
-pont — reconnecte-toi après les avoir changés.
+The **Edit gestures** (*Modifier les gestes*) button opens an editor: list on
+the left, form on the right, with the squares to lift, the time control, the
+game type and the colour. It refuses two gestures on the same squares. Gestures
+are reloaded when the bridge starts — reconnect after changing them.
 
-Trois exemples sont écrits au premier lancement dans
-`~/.config/pegasus-bridge/gestures.json` :
+Three examples are written on first launch to
+`~/.config/pegasus-bridge/gestures.json`:
 
 ```json
 {
@@ -183,279 +189,281 @@ Trois exemples sont écrits au premier lancement dans
 }
 ```
 
-| champ | rôle |
+(The keys are in French: `gestes` = gestures, `nom` = name.)
+
+| field | meaning |
 |---|---|
-| `cases` | les cases à libérer ; elles doivent être occupées en position de départ |
-| `action` | `seek` (adversaire humain) ou `ai` (ordinateur) |
-| `minutes` / `increment` | la cadence |
-| `classee` | partie classée ou amicale (`seek` seulement) |
-| `niveau` | force de l'ordinateur, 1 à 8 (`ai` seulement) |
-| `couleur` | `white`, `black` ou `random` |
+| `cases` | the squares to clear; they must be occupied in the starting position |
+| `action` | `seek` (human opponent) or `ai` (computer) |
+| `minutes` / `increment` | the time control |
+| `classee` | rated or casual game (`seek` only) |
+| `niveau` | computer strength, 1 to 8 (`ai` only) |
+| `couleur` | `white`, `black` or `random` |
 | `variante` | `standard`, `chess960`, `antichess`, `atomic`… |
-| `fourchette` | plage d'Elo des adversaires, ex. `"1500-1800"` |
+| `fourchette` | opponents' rating range, e.g. `"1500-1800"` |
 
-`--no-gestures` désactive le tout ; `--gesture-delay` règle le temps pendant
-lequel les pièces doivent rester levées (1,2 s par défaut — c'est ce délai qui
-laisse soulever deux pièces sans qu'un geste plus court parte en chemin).
+`--no-gestures` disables all of it; `--gesture-delay` sets how long the pieces
+must stay lifted (1.2 s by default — that delay is what lets you lift two
+pieces without a shorter gesture firing along the way).
 
-### Les réglages lumineux
+### Light settings
 
-Bouton **Lumières**. Une jauge de vitesse et une de durée par événement, un
-nombre de clignotements là où ça a un sens, et un bouton *Essayer* par ligne.
+The **Lights** (*Lumières*) button. One speed slider and one duration slider per
+event, a blink count where it makes sense, and a *Try* (*Essayer*) button per
+row.
 
-![Les réglages lumineux](apercu_lumieres.png)
+![Light settings](apercu_lumieres.png)
 
-| événement | durée = | clignotements |
+| event | duration = | blinks |
 |---|---|---|
-| début de partie | durée d'allumage | oui |
-| fin de partie | durée d'un éclat | oui |
-| coup de l'adversaire | battement, **0 = reste allumé** | — |
-| pièce soulevée | battement, **0 = reste allumé** | — |
-| coup accepté | durée d'un clignotement | oui |
-| coup refusé | durée d'un clignotement | oui |
-| recherche d'un adversaire | durée d'un tour de l'anneau | — |
+| game start | time lit | yes |
+| game end | length of one flash | yes |
+| opponent's move | pulse, **0 = stays lit** | — |
+| piece lifted | pulse, **0 = stays lit** | — |
+| move accepted | length of one blink | yes |
+| move rejected | length of one blink | yes |
+| seeking an opponent | time for one turn of the ring | — |
 
-Les jauges agissent **en direct** : le tableau de réglages n'est pas copié, c'est
-celui-là même qu'utilise la partie en cours. Déplace, clique sur *Essayer*,
-recommence — inutile d'attendre une fin de partie pour voir l'animation de fin.
-*Début* et *Fin* ont deux boutons chacun, pour voir aussi le côté noir et la
-nulle.
+The sliders act **live**: the settings table is not copied, it is the very one
+the current game uses. Move a slider, click *Try*, repeat — no need to wait for
+the end of a game to see the end-of-game animation. *Start* and *End* have two
+buttons each, so you can also see the black side and the draw.
 
-*Enregistrer* écrit dans `~/.config/pegasus-bridge/leds.json`, *Valeurs d'usine*
-revient au réglage d'origine sans rien écrire.
+*Save* (*Enregistrer*) writes to `~/.config/pegasus-bridge/leds.json`; *Factory
+defaults* (*Valeurs d'usine*) restores the original settings without writing
+anything.
 
-Les deux états qui durent — coup de l'adversaire, pièce soulevée — restent
-allumés tant que leur durée vaut 0. Au-delà, ils battent à ce rythme jusqu'à ce
-que la situation change, et une animation qui passe par-dessus met le battement
-en pause puis le laisse reprendre.
+The two lasting states — opponent's move, piece lifted — stay lit while their
+duration is 0. Above that, they pulse at that rate until the situation changes,
+and an animation that plays over them pauses the pulse, then lets it resume.
 
 ---
 
-## Ce que le plateau te dit
+## What the board tells you
 
-| moment | signal lumineux |
+| moment | light signal |
 |---|---|
-| début de partie | ta rangée s'allume d'un bloc — c'est de ce côté qu'il faut t'installer |
-| recherche d'un adversaire | une lumière tourne au centre, sur l'anneau c3-c6-f6-f3 |
-| tu soulèves une pièce | sa case s'allume, tu vois d'où elle vient |
-| coup de l'adversaire | départ et arrivée s'allument jusqu'à ce que tu l'aies rejoué |
-| ton coup accepté | un clin d'œil bref sur le trajet, dès que lichess l'a validé |
-| ton coup refusé | battement rapide et insistant sur le trajet |
-| plateau à corriger | les cases fautives s'allument |
-| victoire | la rangée du gagnant s'allume deux fois |
-| nulle | les deux rangées à la fois, les seize cases |
+| game start | your back rank lights up all at once — that's the side to sit on |
+| seeking an opponent | a light circles in the middle, on the c3-c6-f6-f3 ring |
+| you lift a piece | its square lights up, so you see where it came from |
+| opponent's move | from and to squares light up until you've played it back |
+| your move accepted | a short wink along the path, as soon as lichess validates it |
+| your move rejected | fast, insistent pulse along the path |
+| board needs fixing | the wrong squares light up |
+| win | the winner's back rank lights up twice |
+| draw | both back ranks at once, all sixteen squares |
 
-### Qui anime : le plateau, pas nous
+### Who animates: the board, not us
 
-Le Pegasus n'allume pas la liste de cases qu'on lui envoie : il la **parcourt**,
-case après case, à la cadence donnée par le troisième octet de la trame.
+The Pegasus does not light the list of squares it is sent: it **walks through**
+it, square after square, at the rate given by the third byte of the frame.
 
 ```
 60 0d 05 40 00 01 38 39 3a 3b 3c 3d 3e 3f 00
-      │  │  │  │  └ les cases : a1 b1 c1 d1 e1 f1 g1 h1
-      │  │  │  └ luminosité
-      │  │  └ répétitions
-      │  └ cadence du parcours  ← 64 : si rapide que tout paraît simultané
-      │                            8 : balayage visible ; 2 : beaucoup trop lent
-      └ sous-commande « suite de cases »
+      │  │  │  │  └ the squares: a1 b1 c1 d1 e1 f1 g1 h1
+      │  │  │  └ brightness
+      │  │  └ repetitions
+      │  └ walk rate  ← 64: so fast everything looks simultaneous
+      │                   8: visible sweep; 2: far too slow
+      └ "square sequence" subcommand
 ```
 
-Ignorer ça coûte cher. Les premières animations faisaient clignoter une rangée
-en l'éteignant toutes les 130 ms : chaque extinction relançait le parcours
-depuis le début, et seule la première case avait le temps d'apparaître. D'où le
-symptôme « seule a1 clignote », qui n'avait rien d'un problème de LED.
+Ignoring this is costly. The first animations blinked a rank by switching it off
+every 130 ms: each switch-off restarted the walk from the beginning, and only
+the first square had time to show. Hence the "only a1 blinks" symptom, which had
+nothing to do with the LEDs.
 
-La bonne façon est d'envoyer la liste **une fois**, à la bonne cadence, et de ne
-plus y toucher. L'ordre de la liste donne le sens du parcours : les noirs
-reçoivent h8→a8 pour que la lumière parte de leur gauche comme celle des blancs
-part de la leur, et la nulle entrelace les deux rangées (a1, h8, b1, g8…) pour
-faire avancer deux lumières de front.
+The right way is to send the list **once**, at the right rate, and leave it
+alone. The order of the list sets the direction of the walk: black gets h8→a8 so
+the light starts from their left just as white's starts from theirs, and the
+draw interleaves both ranks (a1, h8, b1, g8…) to move two lights side by side.
 
-`--led-speed N` impose la même cadence partout, quoi que disent les réglages ;
-`--led-style chase` fait animer par le programme au lieu du plateau, au cas où
-un firmware ne parcourrait pas la liste.
+`--led-speed N` forces the same rate everywhere, regardless of the settings;
+`--led-style chase` makes the program animate instead of the board, in case some
+firmware doesn't walk the list.
 
-**Une seule couleur.** Cinq paramètres dans la trame, aucun n'est une couleur.
-L'octet de luminosité, lui, reste un point d'interrogation : l'essai 10 de la
-sonde `led` le teste à six intensités.
+**One colour only.** Five parameters in the frame, none of them a colour. The
+brightness byte remains a question mark: test 10 of the `led` probe tries it at
+six intensities.
 
 ---
 
-## Les fichiers de configuration
+## Configuration files
 
-Tout vit dans `~/.config/pegasus-bridge/` (ou `$XDG_CONFIG_HOME`).
+Everything lives in `~/.config/pegasus-bridge/` (or `$XDG_CONFIG_HOME`).
 
-| fichier | contenu | édité par |
+| file | contents | edited by |
 |---|---|---|
-| `token` | le jeton lichess, en 0600 | la case *retenir*, ou `--save-token` |
-| `gestures.json` | les gestes de lancement | le bouton *Modifier les gestes* |
-| `leds.json` | les réglages lumineux | le bouton *Lumières* |
+| `token` | the lichess token, mode 0600 | the *remember* checkbox, or `--save-token` |
+| `gestures.json` | the start gestures | the *Edit gestures* button |
+| `leds.json` | the light settings | the *Lights* button |
+| `settings.json` | the interface language | the *FR / EN* selector, or `--lang` |
 
-Chacun a son option pour pointer ailleurs : `--token`, `--gestures`,
+The first three each have an option to point elsewhere: `--token`, `--gestures`,
 `--leds-file`.
 
 ---
 
-## La ligne de commande
+## Command line
 
 ```
 pegasus_bridge.py {scan,probe,watch,diag,raw,led,play,serve}
 ```
 
-| sous-commande | à quoi ça sert |
+| subcommand | what it's for |
 |---|---|
-| `scan` | lister les périphériques BLE et repérer le Pegasus |
-| `probe` | vérifier la liaison et voir l'occupation en direct |
-| `watch` | n'afficher que les changements de capteurs |
-| `diag` | interroger la carte : verrouillage, autorisation, version |
-| `raw` | console brute, envoyer des octets à la main |
-| `led` | sonder les LED : animations retenues, variantes, cadences |
-| `play` | **jouer sur lichess** — le mode normal |
-| `serve` | se faire passer pour une carte DGT sur un port série (annexe A) |
+| `scan` | list BLE devices and spot the Pegasus |
+| `probe` | check the link and see occupancy live |
+| `watch` | show only sensor changes |
+| `diag` | query the board: lock, authorisation, version |
+| `raw` | raw console, send bytes by hand |
+| `led` | probe the LEDs: chosen animations, variants, rates |
+| `play` | **play on lichess** — the normal mode |
+| `serve` | pose as a DGT board on a serial port (appendix A) |
 
-Les options les plus utiles de `play` :
+The most useful `play` options:
 
-| option | défaut | rôle |
+| option | default | purpose |
 |---|---|---|
-| `--address` | — | adresse BLE du plateau ; sans elle, il est cherché |
-| `--token` | `$LICHESS_TOKEN`, puis le fichier | le jeton lichess |
-| `--save-token` | — | retenir le jeton pour les fois suivantes |
-| `--flip` | — | plateau tourné de 180°, noirs devant toi |
-| `--game` | — | rejoindre une partie précise par son identifiant |
-| `--promotion` | `q` | pièce supposée à la promotion |
-| `--settle` | 0,15 s | stabilisation avant d'analyser une position |
-| `--gesture-delay` | 1,2 s | temps pendant lequel les pièces restent levées |
-| `--no-leds` / `--no-gestures` | — | couper les lumières ou les gestes |
-| `--led-speed` / `--leds-file` | — | cadence imposée, autre fichier de réglages |
-| `--show-board` | — | afficher le plateau en continu dans le terminal |
-| `-v` / `--trace` | — | journal détaillé / toutes les notifications BLE |
+| `--address` | — | the board's BLE address; without it, the board is searched for |
+| `--token` | `$LICHESS_TOKEN`, then the file | the lichess token |
+| `--save-token` | — | remember the token for next time |
+| `--flip` | — | board rotated 180°, black in front of you |
+| `--game` | — | join a specific game by its ID |
+| `--promotion` | `q` | piece assumed on promotion |
+| `--settle` | 0.15 s | settling time before reading a position |
+| `--gesture-delay` | 1.2 s | how long the pieces stay lifted |
+| `--no-leds` / `--no-gestures` | — | turn off lights or gestures |
+| `--led-speed` / `--leds-file` | — | forced rate, other settings file |
+| `--show-board` | — | show the board continuously in the terminal |
+| `--lang` | system language | `fr` or `en` for the messages |
+| `-v` / `--trace` | — | detailed log / every BLE notification |
 
-`-v` et `--debug` s'acceptent avant **comme** après la sous-commande.
+`-v`, `--debug` and `--lang` are accepted before **as well as** after the subcommand.
 
 ---
 
-## Quand ça ne marche pas
+## Troubleshooting
 
-### 1. Calibrer — de loin la cause la plus fréquente
+### 1. Calibrate — by far the most common cause
 
-La détection du Pegasus est **inductive**, pas magnétique : une détection de
-métal à très courte portée. Un aimant ne prouve donc rien, et surtout le plateau
-doit être **calibré** — ça ne se fait pas tout seul à l'allumage, contrairement
-à ce que les LED du démarrage laissent croire.
+The Pegasus's detection is **inductive**, not magnetic: very short-range metal
+detection. So a magnet proves nothing, and above all the board must be
+**calibrated** — it does not happen by itself at power-on, despite what the
+start-up LEDs suggest.
 
-Sans calibration, le plateau renvoie `01` sur les 64 cases (« tout occupé »), ne
-signale jamais aucun changement, et se comporte exactement comme s'il était en
-panne. **Calibre d'abord, débogue ensuite.**
+Without calibration, the board reports `01` on all 64 squares ("all occupied"),
+never signals any change, and behaves exactly as if it were broken. **Calibrate
+first, debug later.**
 
-Si le plateau reste muet, DGT publie une remise à zéro usine : charge complète,
-plateau éteint et vide, puis appui long sur on/off **jusqu'à ce que d4, d5, e4 et
-e5 clignotent rapidement et simultanément**. Si ces quatre cases ne clignotent
-pas, la carte capteurs/LED ne répond pas et c'est un défaut matériel.
+If the board stays silent, DGT publishes a factory reset: full charge, board
+off and empty, then long-press on/off **until d4, d5, e4 and e5 blink rapidly
+and simultaneously**. If those four squares don't blink, the sensor/LED board
+isn't responding and it's a hardware fault.
 
-### 2. La liaison BLE
+### 2. The BLE link
 
 ```bash
 pegasus_bridge.py scan
 ```
 
-Une ligne doit porter `<-- Nordic UART (Pegasus ?)`. Relève l'adresse, puis :
+One line should read `<-- Nordic UART (Pegasus ?)`. Note the address, then:
 
 ```bash
 pegasus_bridge.py probe --address XX:XX:XX:XX:XX:XX -v
 ```
 
-Le handshake doit afficher le numéro de série et `firmware 1.x (major=1 ->
-Pegasus confirmé)`, puis l'échiquier se met à jour quand tu bouges une pièce.
-Rien ne sert de continuer avant que cette étape marche.
+The handshake should print the serial number and `firmware 1.x (major=1 ->
+Pegasus confirmé)`, then the board updates when you move a piece. There's no
+point going further until this step works.
 
-### 3. La carte répond mais ne livre pas l'occupation
+### 3. The board responds but doesn't report occupancy
 
-Le handshake passe — numéro de série, firmware, trademark — mais le dump annonce
-64 cases occupées et aucun changement n'arrive.
+The handshake succeeds — serial number, firmware, trademark — but the dump
+reports 64 occupied squares and no change ever arrives.
 
 ```bash
 pegasus_bridge.py probe --address XX:XX:XX:XX:XX:XX -v --trace
 pegasus_bridge.py raw --address XX:XX:XX:XX:XX:XX --led-test
 ```
 
-| indice dans la trace | cause | correctif |
+| clue in the trace | cause | fix |
 |---|---|---|
-| dump constant `01` × 64 | plateau non calibré (voir 1), ou carte non déverrouillée | calibrer ; `--handshake ext` |
-| le nombre de cases occupées **baisse** quand tu ajoutes des pièces | codage inversé | `--invert` |
-| dump figé mais plausible | la carte ne pousse rien d'elle-même | `--poll 0.3` |
+| constant `01` × 64 dump | board not calibrated (see 1), or board not unlocked | calibrate; `--handshake ext` |
+| the occupied count **drops** when you add pieces | inverted encoding | `--invert` |
+| frozen but plausible dump | the board pushes nothing on its own | `--poll 0.3` |
 
-`--led-test` allume une rangée trois secondes : c'est la preuve physique que la
-carte reçoit tes commandes. Si les LED s'allument, le problème est du côté des
-données, pas de la liaison.
+`--led-test` lights a rank for three seconds: physical proof that the board
+receives your commands. If the LEDs light up, the problem is on the data side,
+not the link.
 
-Deux séquences d'initialisation coexistent dans les implémentations publiques :
+Two initialisation sequences coexist in public implementations:
 
-* `--handshake ext` — celle de l'extension Chrome : clé développeur **en toute
-  première écriture**, puis `40`, `42`, `44`. C'est le défaut, et c'est celle qui
-  marche sur le Pegasus.
-* `--handshake dgt` — celle du pilote Dart `mono424/dgtdriver` : `40`, `45`,
-  `4d`, *puis* la clé. Si la carte n'accepte la clé qu'en première écriture,
-  cette séquence renvoie un plateau factice.
+* `--handshake ext` — the Chrome extension's: developer key **as the very first
+  write**, then `40`, `42`, `44`. This is the default, and the one that works on
+  the Pegasus.
+* `--handshake dgt` — the Dart driver `mono424/dgtdriver`'s: `40`, `45`, `4d`,
+  *then* the key. If the board only accepts the key as the first write, this
+  sequence returns a dummy board.
 
-### 4. Un geste ne lance pas de partie
+### 4. A gesture doesn't start a game
 
-Le journal te dit pourquoi, une fois par situation :
+The log tells you why, once per situation:
 
 ```
-geste : le plateau n'est pas en position de depart : e4 ne devrait pas etre occupee
-geste : cases levees : a1, d1 — aucun geste ne correspond (connus : a1+h8 : …)
-geste : les gestes sont desactives (--no-gestures)
+gesture: the board isn't in the starting position: e4 should not be occupied
+gesture: lifted squares: a1, d1 — no gesture matches (known: a1+h8 : …)
+gesture: gestures are disabled (--no-gestures)
 ```
 
-Un geste ne part que si le plateau porte **exactement** la position initiale
-privée des cases du geste : une pièce oubliée au milieu suffit à tout bloquer.
+A gesture only fires if the board holds **exactly** the starting position minus
+the gesture's squares: one piece left in the middle is enough to block
+everything.
 
-### 5. Le plateau est à l'envers
+### 5. The board is upside down
 
-Si les pièces blanches apparaissent en haut, `--flip` (ou la case *Plateau
-tourné* dans l'interface). Attention à ne pas confondre avec une inversion
-gauche-droite : `--flip` fait tourner de 180°, il n'y a pas de miroir seul.
+If the white pieces appear at the top, use `--flip` (or the *Board rotated*
+(*Plateau tourné*) checkbox in the interface). Don't confuse this with a
+left-right swap: `--flip` rotates 180°, there is no mirror-only mode.
 
 ---
 
-## Les tests
+## Tests
 
 ```bash
 python test_pegasus_bridge.py
 ```
 
-288 contrôles, 33 sections, sans aucun matériel. Ils couvrent le suivi d'une
-partie complète (roques, prises, prise en passant, promotion, pièce en l'air,
-resynchronisation, reprise de coups), l'orientation des cases, le réassemblage
-des trames BLE sur plusieurs notifications, le protocole série et le mode bus
-DGT, les animations lumineuses et leurs réglages, les gestes de lancement, les
-actions de partie et la pendule.
+292 checks, 34 sections, no hardware at all. They cover following a complete
+game (castling, captures, en passant, promotion, piece in the air,
+resynchronisation, takebacks), square orientation, reassembling BLE frames
+split across several notifications, the serial protocol and DGT bus mode, the
+light animations and their settings, start gestures, game actions, the
+clock, and the English translation of every bridge message.
 
-C'est là qu'ont été attrapées la plupart des régressions de ce projet : si tu
-touches au code, lance-les.
+That's where most of this project's regressions were caught: if you touch the
+code, run them.
 
 ---
 
-## Annexe A — le mode LiveChess (`serve`)
+## Appendix A — LiveChess mode (`serve`)
 
-Si tu tiens à l'interface LiveChess ou à son API, le pont peut se faire passer
-pour une carte DGT branchée en série. C'est plus lourd — il faut `tty0tty` et
-`sudo` — et les LED ne fonctionnent pas, LiveChess ne connaissant pas le coup de
-l'adversaire. Le mode `play` est meilleur en tout point ; cette annexe est là
-pour mémoire.
+If you're attached to the LiveChess interface or its API, the bridge can pose as
+a DGT board connected over serial. It's heavier — it needs `tty0tty` and `sudo`
+— and the LEDs don't work, since LiveChess doesn't know the opponent's move. The
+`play` mode is better in every way; this appendix is here for the record.
 
-**Le pty ne suffit pas.** Un pseudo-terminal n'a pas de lignes de modem : le
-noyau ne gère ni DTR, ni DSR, ni CTS sur `/dev/pts/*`, et `TIOCMSET` y échoue.
-jSSC, qu'utilise LiveChess, pose DTR/RTS à l'ouverture : il échoue
-silencieusement, ouvre le port et n'écrit jamais rien. Symptôme exact : le port
-apparaît dans la liste, LiveChess dit `Opening port`, et le pont ne reçoit pas un
-octet.
+**A pty isn't enough.** A pseudo-terminal has no modem lines: the kernel handles
+neither DTR, DSR nor CTS on `/dev/pts/*`, and `TIOCMSET` fails there. jSSC, which
+LiveChess uses, sets DTR/RTS on open: it fails silently, opens the port and never
+writes anything. Exact symptom: the port shows up in the list, LiveChess says
+`Opening port`, and the bridge never receives a single byte.
 
-**La solution est `tty0tty`**, un émulateur de câble null-modem qui crée de vrais
-tty noyau appariés, avec les lignes de modem émulées :
+**The solution is `tty0tty`**, a null-modem cable emulator that creates real,
+paired kernel ttys with emulated modem lines:
 
 ```bash
-yay -S tty0tty-dkms          # ou make depuis github.com/lcgamboa/tty0tty
+yay -S tty0tty-dkms          # or make from github.com/lcgamboa/tty0tty
 sudo modprobe tty0tty
 ls -l /dev/tnt*              # tnt0<->tnt1, tnt2<->tnt3, ...
 
@@ -463,85 +471,86 @@ sudo ~/.venv/pegasus/bin/python pegasus_bridge.py serve \
      --address XX:XX:XX:XX:XX:XX --device /dev/tnt1 --link /dev/ttyUSB0 --debug
 ```
 
-Le nom `tnt0` ne correspond à aucun motif reconnu par les bibliothèques série
-(`ttyS`, `ttyUSB`, `ttyACM`, `rfcomm`…), donc LiveChess ne le listerait pas :
-`--link` lui présente un lien au bon nom. Le pont tient `/dev/tnt1`, ouvre les
-droits sur les deux bouts, et pointe `/dev/ttyUSB0` vers `/dev/tnt0`.
+The name `tnt0` matches none of the patterns serial libraries recognise
+(`ttyS`, `ttyUSB`, `ttyACM`, `rfcomm`…), so LiveChess wouldn't list it: `--link`
+presents it under a suitable name. The bridge holds `/dev/tnt1`, opens up
+permissions on both ends, and points `/dev/ttyUSB0` at `/dev/tnt0`.
 
-**Et surtout, le mode bus.** LiveChess est un logiciel de tournoi : il ne détecte
-pas les cartes en mode simple, mais en mode bus DGT, le protocole multi-cartes.
-Sa séquence de détection, lue au `--debug` :
+**And above all, bus mode.** LiveChess is tournament software: it doesn't detect
+boards in simple mode, but in DGT bus mode, the multi-board protocol. Its
+detection sequence, as read with `--debug`:
 
 ```
 40 40 40      reset
-47            trademark        -> doit contenir « Digital Game Technology »
-46            adresse de bus   -> 2 octets de 7 bits
-4a            passage en mode bus
-8b 00 00 0b   DGT_BUS_SEND_VERSION vers l'adresse 0 (diffusion)
+47            trademark        -> must contain "Digital Game Technology"
+46            bus address      -> 2 bytes of 7 bits
+4a            switch to bus mode
+8b 00 00 0b   DGT_BUS_SEND_VERSION to address 0 (broadcast)
 ```
 
-Une carte qui ne répond pas à cette dernière trame n'existe pas pour LiveChess,
-même si tout le reste est parfait. Le pont implémente le mode bus complet : ping,
-dump, version, début de partie, changements et rejeu. Les commandes du mode bus
-font 4 octets — `[code|0x80, adresse MSB, adresse LSB, somme]` — et se
-distinguent du mode simple par le bit 7.
+A board that doesn't answer that last frame doesn't exist for LiveChess, even if
+everything else is perfect. The bridge implements full bus mode: ping, dump,
+version, game start, changes and replay. Bus-mode commands are 4 bytes —
+`[code|0x80, address MSB, address LSB, checksum]` — and are distinguished from
+simple mode by bit 7.
 
-Ensuite : LiveChess sur `http://localhost:1982`, puis sur lichess.org
-*Préférences → DGT board*, qui se connecte à son WebSocket.
+Then: LiveChess at `http://localhost:1982`, then on lichess.org
+*Preferences → DGT board*, which connects to its WebSocket.
 
-Deux détails qui coûtent cher à retrouver : la réponse au trademark **doit**
-contenir `Digital Game Technology\r\nCopyright (c)`, et le pty étant recréé à
-chaque démarrage du pont, LiveChess doit toujours être lancé *après* lui.
-
----
-
-## Annexe B — ce qu'on a appris du protocole
-
-* **BLE** : Nordic UART Service `6E400001-B5A3-F393-E0A9-E50E24DCCA9E`, écriture
-  sur `…0002`, notifications sur `…0003`.
-* **Clé développeur** : `63 07 be f5 ae dd a9 5f 00`, en **toute première
-  écriture**. Sans elle, la carte répond `7f` sur les 64 cases ; avec elle,
-  `a5 01` puis de vraies données.
-* **Trames plateau → hôte** : `[id|0x80, lenHi, lenLo, charge…]`, longueur totale
-  `(lenHi<<7)|lenLo`, en-tête de 3 octets compris. Une trame peut être coupée sur
-  plusieurs notifications : il faut la réassembler.
-* **Index des cases** : 0 = a8 … 63 = h1, soit l'inverse vertical de la
-  convention habituelle (0 = a1). Confondre les deux donne un plateau au miroir
-  qui ressemble à une inversion de couleurs.
-* **Occupation seule.** Le plateau dit quelles cases sont occupées, jamais par
-  quoi. L'identité des pièces est reconstruite en suivant la partie : occupation
-  stable comparée aux coups légaux, en profondeur 1 puis 2. Prises, roques, prise
-  en passant et promotions sont couverts — et chacun a cassé au moins une fois
-  avant d'avoir son test.
-* **Batterie** (message `0xA0`) : pourcentage, heures et minutes restantes, temps
-  d'allumage, temps de veille, et un octet d'état dont le bit 0 dit « en charge »
-  et le bit 1 « sur batterie ».
-* **LED** : voir « Qui anime » plus haut.
+Two details that are costly to rediscover: the trademark response **must**
+contain `Digital Game Technology\r\nCopyright (c)`, and since the pty is
+recreated every time the bridge starts, LiveChess must always be launched
+*after* it.
 
 ---
 
-## Et chess.com ?
+## Appendix B — what we learned about the protocol
 
-Pas de chemin équivalent. L'API publique de chess.com est **en lecture seule** —
-leur documentation le dit mot pour mot : *« You cannot send game-moves or other
-commands to Chess.com from this system »*. Pas d'API Board, pas de jeton de jeu,
-pas d'OAuth pour jouer. Le seul chemin officiel pour un Pegasus passe par
-l'application mobile DGT.
-
-Sur ordinateur, la communauté contourne par une extension de navigateur qui lit
-la position dans le DOM et y injecte les coups — c'est ce que fait
-[PegasusChessComChromeExtension](https://github.com/EdNekebno/PegasusChessComChromeExtension),
-dont vient le protocole BLE utilisé ici. Ça marche, mais ça casse à chaque
-refonte de leur interface, et l'automatisation de la page sort de ce que leurs
-conditions d'utilisation autorisent.
+* **BLE**: Nordic UART Service `6E400001-B5A3-F393-E0A9-E50E24DCCA9E`, write on
+  `…0002`, notifications on `…0003`.
+* **Developer key**: `63 07 be f5 ae dd a9 5f 00`, as the **very first write**.
+  Without it, the board answers `7f` on all 64 squares; with it, `a5 01` and then
+  real data.
+* **Board → host frames**: `[id|0x80, lenHi, lenLo, payload…]`, total length
+  `(lenHi<<7)|lenLo`, including the 3-byte header. A frame can be split across
+  several notifications: it must be reassembled.
+* **Square index**: 0 = a8 … 63 = h1, the vertical inverse of the usual
+  convention (0 = a1). Mixing the two up gives a mirrored board that looks like
+  swapped colours.
+* **Occupancy only.** The board says which squares are occupied, never by what.
+  Piece identity is reconstructed by following the game: stable occupancy
+  compared against legal moves, at depth 1 then 2. Captures, castling, en
+  passant and promotions are covered — and each one broke at least once before
+  getting its test.
+* **Battery** (message `0xA0`): percentage, hours and minutes remaining, on
+  time, standby time, and a status byte whose bit 0 means "charging" and bit 1
+  "on battery".
+* **LEDs**: see "Who animates" above.
 
 ---
 
-## Crédits
+## What about chess.com?
 
-Protocole Pegasus d'après l'implémentation publique
-[BoardKit](https://github.com/fianchettochess/BoardKit) (MIT) et
+There's no equivalent path. chess.com's public API is **read-only** — their
+documentation says so in as many words: *"You cannot send game-moves or other
+commands to Chess.com from this system"*. No Board API, no play token, no OAuth
+for playing. The only official path for a Pegasus goes through the DGT mobile
+app.
+
+On desktop, the community works around it with a browser extension that reads
+the position from the DOM and injects moves into it — that's what
+[PegasusChessComChromeExtension](https://github.com/EdNekebno/PegasusChessComChromeExtension)
+does, and it's where the BLE protocol used here comes from. It works, but it
+breaks with every redesign of their interface, and automating the page goes
+beyond what their terms of service allow.
+
+---
+
+## Credits
+
+Pegasus protocol based on the public implementations
+[BoardKit](https://github.com/fianchettochess/BoardKit) (MIT) and
 [PegasusChessComChromeExtension](https://github.com/EdNekebno/PegasusChessComChromeExtension).
-Protocole série DGT d'après [PicoChess](https://github.com/jromang/picochess)
-(GPL) et la documentation publique DGT. API Board de
+DGT serial protocol based on [PicoChess](https://github.com/jromang/picochess)
+(GPL) and DGT's public documentation. Board API from
 [lichess.org](https://lichess.org/api).

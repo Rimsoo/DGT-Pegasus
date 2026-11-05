@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "pegasus-chess"
-version = "1.0.0"
+version = "1.1.0"
 description = "Pont DGT Pegasus (BLE) vers lichess, avec interface graphique"
 requires-python = ">=3.9"
 dependencies = ["bleak>=0.21", "chess>=1.10"]

@@ -56,6 +56,136 @@ BG = "#2b2b2b"
 FG = "#e8e8e8"
 CELL = 52
 
+# Les libelles sont ecrits en francais ; UI_EN donne leur version anglaise.
+# La langue elle-meme (pb.LANG) est partagee avec le pont.
+UI_EN = {
+    "Recherche des plateaux BLE (10 s)…": "Searching for BLE boards (10 s)…",
+    "(sans nom)": "(no name)",
+    "Aucun plateau trouvé. Est-il allumé ?": "No board found. Is it switched on?",
+    "Erreur : {error}": "Error: {error}",
+    "Connecte le plateau pour essayer les lumières.":
+        "Connect the board to try the lights.",
+    "Aucune partie en cours.": "No game in progress.",
+    # gestes
+    "Gestes de lancement": "Start gestures",
+    "Gestes": "Gestures",
+    "Nouveau": "New",
+    "Supprimer": "Delete",
+    "Nom": "Name",
+    "(aucune)": "(none)",
+    "Pieces a lever": "Pieces to lift",
+    "Chercher un adversaire": "Seek an opponent",
+    "Jouer contre l'ordinateur": "Play the computer",
+    "Action": "Action",
+    "Cadence": "Time control",
+    "partie classee": "rated game",
+    "Niveau (1-8)": "Level (1-8)",
+    "au hasard": "random",
+    "blancs": "white",
+    "noirs": "black",
+    "Couleur": "Colour",
+    "Variante": "Variant",
+    "Appliquer": "Apply",
+    "Enregistrer et fermer": "Save and close",
+    "Nouveau geste": "New gesture",
+    "Sans nom": "Unnamed",
+    "Geste supprime. Pense a enregistrer.": "Gesture deleted. Remember to save.",
+    "Les deux cases doivent etre differentes.": "The two squares must be different.",
+    "Cadence ou niveau illisible.": "Unreadable time control or level.",
+    "Modifie. Enregistre pour que ce soit pris en compte.":
+        "Modified. Save for it to take effect.",
+    "Deux gestes utilisent {squares}.": "Two gestures use {squares}.",
+    "Enregistrement impossible : {error}": "Could not save: {error}",
+    "gestes enregistres ({n}) dans {path}": "gestures saved ({n}) to {path}",
+    "reconnecte-toi pour qu'ils soient relus.": "reconnect for them to be reloaded.",
+    # lumieres
+    "Début de partie": "Game start",
+    "Fin de partie (victoire, nulle)": "Game end (win, draw)",
+    "Coup de l'adversaire": "Opponent's move",
+    "Pièce soulevée": "Piece lifted",
+    "Coup accepté": "Move accepted",
+    "Coup refusé": "Move rejected",
+    "Recherche d'un adversaire": "Seeking an opponent",
+    "durée d'allumage": "time lit",
+    "durée d'un éclat": "length of one flash",
+    "battement (0 = reste allumé)": "pulse (0 = stays lit)",
+    "durée d'un clignotement": "length of one blink",
+    "durée d'un tour de l'anneau": "time for one turn of the ring",
+    "Essayer": "Try",
+    "côté noir": "black side",
+    "Victoire": "Win",
+    "Nulle": "Draw",
+    "Stop": "Stop",
+    "Réglages lumineux": "Light settings",
+    "Événement": "Event",
+    "Vitesse": "Speed",
+    "Durée": "Duration",
+    "Clignotements": "Blinks",
+    "cadence du parcours : 64 allume tout d'un bloc, 8 fait un balayage visible":
+        "walk rate: 64 lights everything at once, 8 makes a visible sweep",
+    "Déplace, clique sur Essayer, recommence. Le plateau doit être connecté.":
+        "Move a slider, click Try, repeat. The board must be connected.",
+    "Valeurs d'usine": "Factory defaults",
+    "Enregistrer": "Save",
+    "Fermer": "Close",
+    "Valeurs d'usine rétablies (non enregistrées).":
+        "Factory defaults restored (not saved).",
+    "Enregistré dans {path}": "Saved to {path}",
+    "Enregistrement impossible — voir le journal.": "Could not save — see the log.",
+    # fenetre principale
+    "Plateau": "Board",
+    "Chercher": "Search",
+    "Jeton lichess": "lichess token",
+    "retenir": "remember",
+    "Langue": "Language",
+    "Plateau tourné (noirs devant moi)": "Board rotated (black in front of me)",
+    "Afficher le plateau": "Show board",
+    "Connecter": "Connect",
+    "Arrêter": "Stop",
+    "adversaire": "opponent",
+    "moi": "me",
+    "moi ({color})": "me ({color})",
+    "Reprise": "Takeback",
+    "Abandonner": "Resign",
+    "Annuler": "Abort",
+    "Refuser": "Decline",
+    "Prêt.": "Ready.",
+    "Modifier les gestes": "Edit gestures",
+    "Lumières": "Lights",
+    "Recherche en cours…": "Searching…",
+    "Arrêt demandé.": "Stop requested.",
+    "Il faut un jeton lichess (portée board:play). Crée-le ici : {url}":
+        "A lichess token is required (board:play scope). Create it here: {url}",
+    "contre {name}": "vs {name}",
+    "avec les {color}": "playing {color}",
+    "{n} demi-coups": "{n} half-moves",
+    "batterie {level}": "battery {level}",
+    "Recherche en cours — repose les pièces pour annuler":
+        "Searching — put the pieces back to cancel",
+    "Soulève ces pièces, plateau au départ, pour lancer une partie :":
+        "Lift these pieces, board in the starting position, to start a game:",
+    "Connexion au plateau…": "Connecting to the board…",
+    "Arrêté.": "Stopped.",
+    "Abandonner la partie en cours ?": "Resign the current game?",
+    "Tk n'est pas disponible dans cet interpreteur Python : "
+    "l'interface graphique ne peut pas demarrer.\n"
+    "Sur Arch : sudo pacman -S tk\n"
+    "En attendant, le pont fonctionne en ligne de commande :\n"
+    "  pegasus_bridge.py play --address XX:XX:XX:XX:XX:XX":
+        "Tk is not available in this Python interpreter: the graphical "
+        "interface cannot start.\n"
+        "On Arch: sudo pacman -S tk\n"
+        "Meanwhile, the bridge works from the command line:\n"
+        "  pegasus_bridge.py play --address XX:XX:XX:XX:XX:XX",
+}
+
+
+def t(text: str, **kw) -> str:
+    """Le libelle dans la langue choisie, avec ses champs {…} remplis."""
+    if pb.LANG == "en":
+        text = UI_EN.get(text, text)
+    return text.format(**kw) if kw else text
+
 
 class Engine:
     """Le pont, dans son fil, pilote par des messages."""
@@ -91,17 +221,17 @@ class Engine:
     # -- actions ----------------------------------------------------------
     async def _scan(self) -> None:
         from bleak import BleakScanner
-        self.outbox.put(("log", "Recherche des plateaux BLE (10 s)…"))
+        self.outbox.put(("log", t("Recherche des plateaux BLE (10 s)…")))
         found = await BleakScanner.discover(timeout=10.0, return_adv=True)
         boards = []
         for dev, adv in found.values():
             uuids = [u.lower() for u in (adv.service_uuids or [])]
             name = dev.name or ""
             if pb.NUS_SERVICE in uuids or "pegas" in name.lower():
-                boards.append((dev.address, name or "(sans nom)"))
+                boards.append((dev.address, name or t("(sans nom)")))
         self.outbox.put(("boards", boards))
         if not boards:
-            self.outbox.put(("log", "Aucun plateau trouvé. Est-il allumé ?"))
+            self.outbox.put(("log", t("Aucun plateau trouvé. Est-il allumé ?")))
 
     def scan(self) -> None:
         self.submit(self._scan())
@@ -130,7 +260,7 @@ class Engine:
             except asyncio.CancelledError:
                 pass
             except Exception as exc:
-                self.outbox.put(("log", f"Erreur : {exc}"))
+                self.outbox.put(("log", t("Erreur : {error}", error=exc)))
             finally:
                 self.outbox.put(("stopped", None))
 
@@ -143,8 +273,8 @@ class Engine:
         """Rejoue une animation sur le plateau, pour regler les jauges."""
         leds = self.leds
         if leds is None or not (self.thread and self.thread.is_alive()):
-            self.outbox.put(("log", "Connecte le plateau pour essayer les "
-                                    "lumières."))
+            self.outbox.put(("log", t("Connecte le plateau pour essayer les "
+                                      "lumières.")))
             return
 
         async def go():
@@ -156,7 +286,7 @@ class Engine:
         """Abandon, nulle, reprise, ajout de temps : c'est lichess qui tranche."""
         session = self.session
         if session is None or not (self.thread and self.thread.is_alive()):
-            self.outbox.put(("log", "Aucune partie en cours."))
+            self.outbox.put(("log", t("Aucune partie en cours.")))
             return
         self.submit(session.action(nom, seconds))
 
@@ -232,7 +362,7 @@ class GestureEditor(tk.Toplevel):
     def __init__(self, parent: "App") -> None:
         super().__init__(parent)
         self.parent = parent
-        self.title("Gestes de lancement")
+        self.title(t("Gestes de lancement"))
         self.configure(bg=BG)
         self.resizable(False, False)
         self.gestes = pb.load_gestures()
@@ -240,7 +370,7 @@ class GestureEditor(tk.Toplevel):
 
         gauche = ttk.Frame(self, padding=10)
         gauche.grid(row=0, column=0, sticky="ns")
-        ttk.Label(gauche, text="Gestes").pack(anchor="w")
+        ttk.Label(gauche, text=t("Gestes")).pack(anchor="w")
         self.liste = tk.Listbox(gauche, width=30, height=12, bg="#1e1e1e",
                                 fg=FG, relief="flat",
                                 selectbackground="#3a6ea5")
@@ -248,8 +378,8 @@ class GestureEditor(tk.Toplevel):
         self.liste.bind("<<ListboxSelect>>", self._select)
         barre = ttk.Frame(gauche)
         barre.pack(fill="x", pady=(6, 0))
-        ttk.Button(barre, text="Nouveau", command=self._new).pack(side="left")
-        ttk.Button(barre, text="Supprimer",
+        ttk.Button(barre, text=t("Nouveau"), command=self._new).pack(side="left")
+        ttk.Button(barre, text=t("Supprimer"),
                    command=self._delete).pack(side="left", padx=4)
 
         droite = ttk.Frame(self, padding=10)
@@ -261,23 +391,23 @@ class GestureEditor(tk.Toplevel):
             widget.grid(row=rang, column=1, sticky="w", pady=3, padx=(8, 0))
 
         self.nom = ttk.Entry(droite, width=26)
-        ligne(0, "Nom", self.nom)
+        ligne(0, t("Nom"), self.nom)
 
         cases = ttk.Frame(droite)
         self.case1 = ttk.Combobox(cases, values=self.CASES, width=5,
                                   state="readonly")
-        self.case2 = ttk.Combobox(cases, values=["(aucune)"] + self.CASES,
+        self.case2 = ttk.Combobox(cases, values=[t("(aucune)")] + self.CASES,
                                   width=8, state="readonly")
         self.case1.pack(side="left")
         ttk.Label(cases, text=" + ").pack(side="left")
         self.case2.pack(side="left")
-        ligne(1, "Pieces a lever", cases)
+        ligne(1, t("Pieces a lever"), cases)
 
         self.action = ttk.Combobox(droite, width=24, state="readonly",
-                                   values=["Chercher un adversaire",
-                                           "Jouer contre l'ordinateur"])
+                                   values=[t("Chercher un adversaire"),
+                                           t("Jouer contre l'ordinateur")])
         self.action.bind("<<ComboboxSelected>>", lambda _e: self._refresh_fields())
-        ligne(2, "Action", self.action)
+        ligne(2, t("Action"), self.action)
 
         cadence = ttk.Frame(droite)
         self.minutes = ttk.Spinbox(cadence, from_=0, to=180, width=5)
@@ -286,31 +416,32 @@ class GestureEditor(tk.Toplevel):
         ttk.Label(cadence, text=" min  +  ").pack(side="left")
         self.increment.pack(side="left")
         ttk.Label(cadence, text=" s").pack(side="left")
-        ligne(3, "Cadence", cadence)
+        ligne(3, t("Cadence"), cadence)
 
         self.classee = tk.BooleanVar(value=False)
-        self.case_classee = ttk.Checkbutton(droite, text="partie classee",
+        self.case_classee = ttk.Checkbutton(droite, text=t("partie classee"),
                                             variable=self.classee)
         ligne(4, "", self.case_classee)
 
         self.niveau = ttk.Spinbox(droite, from_=1, to=8, width=5)
-        ligne(5, "Niveau (1-8)", self.niveau)
+        ligne(5, t("Niveau (1-8)"), self.niveau)
 
         self.couleur = ttk.Combobox(droite, width=12, state="readonly",
-                                    values=["au hasard", "blancs", "noirs"])
-        ligne(6, "Couleur", self.couleur)
+                                    values=[t("au hasard"), t("blancs"),
+                                            t("noirs")])
+        ligne(6, t("Couleur"), self.couleur)
 
         self.variante = ttk.Combobox(droite, width=14, state="readonly",
                                      values=["standard", "chess960",
                                              "antichess", "atomic", "crazyhouse",
                                              "horde", "kingOfTheHill",
                                              "racingKings", "threeCheck"])
-        ligne(7, "Variante", self.variante)
+        ligne(7, t("Variante"), self.variante)
 
         bas = ttk.Frame(droite)
         bas.grid(row=8, column=0, columnspan=2, pady=(12, 0), sticky="e")
-        ttk.Button(bas, text="Appliquer", command=self._apply).pack(side="left")
-        ttk.Button(bas, text="Enregistrer et fermer",
+        ttk.Button(bas, text=t("Appliquer"), command=self._apply).pack(side="left")
+        ttk.Button(bas, text=t("Enregistrer et fermer"),
                    command=self._save).pack(side="left", padx=6)
 
         self.info = ttk.Label(self, text="", padding=(10, 0, 10, 8))
@@ -337,26 +468,25 @@ class GestureEditor(tk.Toplevel):
         self.nom.delete(0, "end"); self.nom.insert(0, g.get("nom", ""))
         cases = list(g.get("cases", []))
         self.case1.set(cases[0] if cases else "a1")
-        self.case2.set(cases[1] if len(cases) > 1 else "(aucune)")
-        self.action.set("Jouer contre l'ordinateur"
-                        if g.get("action") == "ai" else "Chercher un adversaire")
+        self.case2.set(cases[1] if len(cases) > 1 else t("(aucune)"))
+        self.action.current(1 if g.get("action") == "ai" else 0)
         self.minutes.delete(0, "end"); self.minutes.insert(0, g.get("minutes", 10))
         self.increment.delete(0, "end")
         self.increment.insert(0, g.get("increment", 0))
         self.classee.set(bool(g.get("classee", False)))
         self.niveau.delete(0, "end"); self.niveau.insert(0, g.get("niveau", 1))
-        self.couleur.set({"white": "blancs", "black": "noirs"}.get(
-            g.get("couleur", "random"), "au hasard"))
+        self.couleur.current({"white": 1, "black": 2}.get(
+            g.get("couleur", "random"), 0))
         self.variante.set(g.get("variante", "standard"))
         self._refresh_fields()
 
     def _refresh_fields(self) -> None:
-        ordinateur = self.action.get().startswith("Jouer")
+        ordinateur = self.action.current() == 1
         self.niveau.configure(state="normal" if ordinateur else "disabled")
         self.case_classee.configure(state="disabled" if ordinateur else "normal")
 
     def _new(self) -> None:
-        self.gestes.append({"nom": "Nouveau geste", "cases": ["a1", "h8"],
+        self.gestes.append({"nom": t("Nouveau geste"), "cases": ["a1", "h8"],
                             "action": "seek", "minutes": 10, "increment": 0,
                             "classee": False})
         self._fill_list()
@@ -370,32 +500,32 @@ class GestureEditor(tk.Toplevel):
         del self.gestes[self.index]
         self.index = None
         self._fill_list()
-        self.info.configure(text="Geste supprime. Pense a enregistrer.")
+        self.info.configure(text=t("Geste supprime. Pense a enregistrer."))
 
     # -- edition ----------------------------------------------------------
     def _collect(self) -> Optional[dict]:
         cases = [self.case1.get()]
-        if self.case2.get() and self.case2.get() != "(aucune)":
+        if self.case2.get() and self.case2.current() != 0:
             cases.append(self.case2.get())
         if len(set(cases)) != len(cases):
-            self.info.configure(text="Les deux cases doivent etre differentes.")
+            self.info.configure(text=t("Les deux cases doivent etre differentes."))
             return None
-        ordinateur = self.action.get().startswith("Jouer")
+        ordinateur = self.action.current() == 1
         try:
             minutes = float(self.minutes.get())
             increment = int(self.increment.get())
             niveau = int(self.niveau.get())
         except ValueError:
-            self.info.configure(text="Cadence ou niveau illisible.")
+            self.info.configure(text=t("Cadence ou niveau illisible."))
             return None
         geste = {
-            "nom": self.nom.get().strip() or "Sans nom",
+            "nom": self.nom.get().strip() or t("Sans nom"),
             "cases": cases,
             "action": "ai" if ordinateur else "seek",
             "minutes": minutes,
             "increment": increment,
-            "couleur": {"blancs": "white", "noirs": "black"}.get(
-                self.couleur.get(), "random"),
+            "couleur": {1: "white", 2: "black"}.get(
+                self.couleur.current(), "random"),
             "variante": self.variante.get() or "standard",
         }
         if ordinateur:
@@ -416,8 +546,8 @@ class GestureEditor(tk.Toplevel):
         self._fill_list()
         self.liste.selection_clear(0, "end")
         self.liste.selection_set(self.index)
-        self.info.configure(text="Modifie. Enregistre pour que ce soit pris "
-                                 "en compte.")
+        self.info.configure(text=t("Modifie. Enregistre pour que ce soit "
+                                   "pris en compte."))
         return True
 
     def _save(self) -> None:
@@ -428,7 +558,8 @@ class GestureEditor(tk.Toplevel):
             cle = frozenset(g.get("cases", []))
             if cle in doublons:
                 self.info.configure(
-                    text=f"Deux gestes utilisent {'+'.join(sorted(cle))}.")
+                    text=t("Deux gestes utilisent {squares}.",
+                           squares="+".join(sorted(cle))))
                 return
             doublons[cle] = g
         try:
@@ -437,11 +568,12 @@ class GestureEditor(tk.Toplevel):
                 json.dump({"gestes": self.gestes}, handle, indent=2,
                           ensure_ascii=False)
         except OSError as exc:
-            self.info.configure(text=f"Enregistrement impossible : {exc}")
+            self.info.configure(text=t("Enregistrement impossible : {error}",
+                                       error=exc))
             return
-        self.parent._log(f"gestes enregistres ({len(self.gestes)}) dans "
-                         f"{pb.GESTURES_PATH}")
-        self.parent._log("reconnecte-toi pour qu'ils soient relus.")
+        self.parent._log(t("gestes enregistres ({n}) dans {path}",
+                           n=len(self.gestes), path=pb.GESTURES_PATH))
+        self.parent._log(t("reconnecte-toi pour qu'ils soient relus."))
         self.destroy()
 
 
@@ -487,7 +619,7 @@ class LedEditor(tk.Toplevel):
     def __init__(self, parent: "App") -> None:
         super().__init__(parent)
         self.parent = parent
-        self.title("Réglages lumineux")
+        self.title(t("Réglages lumineux"))
         self.configure(bg=BG)
         self.resizable(False, False)
         self.cfg = parent.led_settings          # le dictionnaire vivant
@@ -498,18 +630,18 @@ class LedEditor(tk.Toplevel):
 
         for col, titre in enumerate(("Événement", "Vitesse", "Durée",
                                      "Clignotements", "")):
-            ttk.Label(cadre, text=titre, font=("", 9, "bold")).grid(
+            ttk.Label(cadre, text=t(titre), font=("", 9, "bold")).grid(
                 row=0, column=col, sticky="w", padx=(0, 10), pady=(0, 6))
 
         for rang, (nom, legende, repetable, essais) in enumerate(self.RANGEES,
                                                                  start=1):
-            ttk.Label(cadre, text=self.NOMS.get(nom, nom)).grid(
+            ttk.Label(cadre, text=t(self.NOMS.get(nom, nom))).grid(
                 row=rang, column=0, sticky="w", pady=5, padx=(0, 10))
             self.vars[nom] = {}
             self._jauge(cadre, rang, 1, nom, "vitesse", 1, 127,
-                        "cadence du parcours : 64 allume tout d'un bloc, "
-                        "8 fait un balayage visible")
-            self._jauge(cadre, rang, 2, nom, "duree", 0.0, 5.0, legende)
+                        t("cadence du parcours : 64 allume tout d'un bloc, "
+                          "8 fait un balayage visible"))
+            self._jauge(cadre, rang, 2, nom, "duree", 0.0, 5.0, t(legende))
             if repetable:
                 self._compteur(cadre, rang, 3, nom)
             else:
@@ -518,13 +650,13 @@ class LedEditor(tk.Toplevel):
             boutons = ttk.Frame(cadre)
             boutons.grid(row=rang, column=4, sticky="w", padx=(10, 0))
             for texte, kind in essais:
-                ttk.Button(boutons, text=texte, width=9,
+                ttk.Button(boutons, text=t(texte), width=9,
                            command=lambda k=kind: self.parent.engine.test_led(k)
                            ).pack(side="left", padx=2)
 
-        self.info = ttk.Label(cadre, text="Déplace, clique sur Essayer, "
-                                          "recommence. Le plateau doit être "
-                                          "connecté.",
+        self.info = ttk.Label(cadre, text=t("Déplace, clique sur Essayer, "
+                                            "recommence. Le plateau doit être "
+                                            "connecté."),
                               wraplength=640, justify="left")
         self.info.grid(row=len(self.RANGEES) + 1, column=0, columnspan=5,
                        sticky="w", pady=(12, 0))
@@ -532,11 +664,11 @@ class LedEditor(tk.Toplevel):
         bas = ttk.Frame(cadre)
         bas.grid(row=len(self.RANGEES) + 2, column=0, columnspan=5,
                  sticky="e", pady=(10, 0))
-        ttk.Button(bas, text="Valeurs d'usine",
+        ttk.Button(bas, text=t("Valeurs d'usine"),
                    command=self._reset).pack(side="left")
-        ttk.Button(bas, text="Enregistrer",
+        ttk.Button(bas, text=t("Enregistrer"),
                    command=self._save).pack(side="left", padx=6)
-        ttk.Button(bas, text="Fermer", command=self.destroy).pack(side="left")
+        ttk.Button(bas, text=t("Fermer"), command=self.destroy).pack(side="left")
 
     # -- construction des lignes -----------------------------------------
     def _jauge(self, cadre, rang, col, nom, champ, bas, haut, legende) -> None:
@@ -598,14 +730,15 @@ class LedEditor(tk.Toplevel):
             self.cfg[nom].update(champs)
             for champ, var in self.vars.get(nom, {}).items():
                 var.set(champs[champ])
-        self.info.configure(text="Valeurs d'usine rétablies (non enregistrées).")
+        self.info.configure(text=t("Valeurs d'usine rétablies (non enregistrées)."))
 
     def _save(self) -> None:
         if pb.save_led_settings(self.cfg):
-            self.info.configure(text=f"Enregistré dans {pb.LEDS_PATH}")
+            self.info.configure(text=t("Enregistré dans {path}",
+                                       path=pb.LEDS_PATH))
         else:
-            self.info.configure(text="Enregistrement impossible — "
-                                     "voir le journal.")
+            self.info.configure(text=t("Enregistrement impossible — "
+                                       "voir le journal."))
 
 
 class App(tk.Tk):
@@ -621,6 +754,14 @@ class App(tk.Tk):
         # Charge une fois pour toutes : ce dictionnaire est ensuite partage
         # avec le pont, donc les jauges agissent en direct.
         self.led_settings = pb.load_led_settings()
+        # Ces variables survivent a une reconstruction de la fenetre (changement
+        # de langue) : elles sont creees ici, pas dans _build.
+        existing = pb.load_token()
+        self._token_text = existing or ""
+        self.save_token = tk.BooleanVar(value=not existing)
+        self.flip = tk.BooleanVar(value=False)
+        self.show_board = tk.BooleanVar(value=True)
+        self.lang = tk.StringVar(value=pb.LANG.upper())
 
         self._build()
         self._install_logging()
@@ -644,34 +785,33 @@ class App(tk.Tk):
         top = ttk.Frame(self, padding=(10, 10, 10, 4))
         top.grid(row=0, column=0, columnspan=2, sticky="ew")
 
-        ttk.Label(top, text="Plateau").grid(row=0, column=0, sticky="w")
+        ttk.Label(top, text=t("Plateau")).grid(row=0, column=0, sticky="w")
         self.address = ttk.Combobox(top, width=24, values=[])
         self.address.grid(row=0, column=1, padx=6)
-        self.scan_btn = ttk.Button(top, text="Chercher", command=self._scan)
+        self.scan_btn = ttk.Button(top, text=t("Chercher"), command=self._scan)
         self.scan_btn.grid(row=0, column=2)
-        ttk.Label(top, text="Jeton lichess").grid(row=0, column=3, sticky="e",
+        ttk.Label(top, text=t("Jeton lichess")).grid(row=0, column=3, sticky="e",
                                                   padx=(16, 0))
         self.token = ttk.Entry(top, width=22, show="\u2022")
         self.token.grid(row=0, column=4, padx=6)
-        existing = pb.load_token()
-        if existing:
-            self.token.insert(0, existing)
-        self.save_token = tk.BooleanVar(value=not existing)
-        ttk.Checkbutton(top, text="retenir",
+        self.token.insert(0, self._token_text)
+        ttk.Checkbutton(top, text=t("retenir"),
                         variable=self.save_token).grid(row=0, column=5)
+        langue = ttk.Combobox(top, width=4, state="readonly",
+                              values=["FR", "EN"], textvariable=self.lang)
+        langue.grid(row=0, column=6, padx=(12, 0))
+        langue.bind("<<ComboboxSelected>>", self._set_lang)
 
-        self.flip = tk.BooleanVar(value=False)
-        ttk.Checkbutton(top, text="Plateau tourné (noirs devant moi)",
+        ttk.Checkbutton(top, text=t("Plateau tourné (noirs devant moi)"),
                         variable=self.flip).grid(row=1, column=0, columnspan=3,
                                                  sticky="w", pady=(6, 0))
-        self.show_board = tk.BooleanVar(value=True)
-        ttk.Checkbutton(top, text="Afficher le plateau",
+        ttk.Checkbutton(top, text=t("Afficher le plateau"),
                         variable=self.show_board,
                         command=self._toggle_board).grid(row=1, column=3,
                                                          columnspan=2,
                                                          sticky="w",
                                                          pady=(6, 0))
-        self.start_btn = ttk.Button(top, text="Connecter", command=self._toggle)
+        self.start_btn = ttk.Button(top, text=t("Connecter"), command=self._toggle)
         self.start_btn.grid(row=1, column=5, pady=(6, 0))
 
         # -- colonne de gauche : le plateau
@@ -685,7 +825,7 @@ class App(tk.Tk):
         cote = ttk.Frame(self, padding=(4, 6, 12, 6))
         cote.grid(row=1, column=1, sticky="n")
 
-        self.clock_top_name = ttk.Label(cote, text="adversaire", anchor="e")
+        self.clock_top_name = ttk.Label(cote, text=t("adversaire"), anchor="e")
         self.clock_top_name.pack(fill="x")
         self.clock_top = tk.Label(cote, text="--:--", bg=BG, fg="#8a8a8a",
                                   font=("monospace", 34, "bold"), anchor="e")
@@ -694,7 +834,7 @@ class App(tk.Tk):
         self.clock_bottom = tk.Label(cote, text="--:--", bg=BG, fg=FG,
                                      font=("monospace", 34, "bold"), anchor="e")
         self.clock_bottom.pack(fill="x")
-        self.clock_bottom_name = ttk.Label(cote, text="moi", anchor="e")
+        self.clock_bottom_name = ttk.Label(cote, text=t("moi"), anchor="e")
         self.clock_bottom_name.pack(fill="x")
 
         # -- actions de partie : ce qui ne se fait pas en poussant une piece
@@ -708,13 +848,13 @@ class App(tk.Tk):
                 ("Abandonner", "abandon", 1, 0),
                 ("Annuler", "annuler", 1, 1),
                 ("Refuser", "refuser", 1, 2)):
-            b = ttk.Button(actions, text=texte, width=10,
+            b = ttk.Button(actions, text=t(texte), width=10,
                            command=lambda n=nom: self._game_action(n))
             b.grid(row=rang, column=col, padx=2, pady=2)
             b.state(["disabled"])
             self.boutons_partie.append(b)
 
-        self.status = ttk.Label(cote, text="Prêt.", font=("", 10, "bold"),
+        self.status = ttk.Label(cote, text=t("Prêt."), font=("", 10, "bold"),
                                 wraplength=260, justify="left")
         self.status.pack(fill="x", pady=(16, 0), anchor="w")
         self.detail = ttk.Label(cote, text="", wraplength=260,
@@ -726,9 +866,9 @@ class App(tk.Tk):
         self.gestures.pack(fill="x", pady=(12, 4), anchor="w")
         reglages = ttk.Frame(cote)
         reglages.pack(fill="x", anchor="w")
-        ttk.Button(reglages, text="Modifier les gestes",
+        ttk.Button(reglages, text=t("Modifier les gestes"),
                    command=self._open_gestures).pack(side="left")
-        ttk.Button(reglages, text="Lumières",
+        ttk.Button(reglages, text=t("Lumières"),
                    command=self._open_leds).pack(side="left", padx=6)
 
         # -- bas : le journal, sur toute la largeur
@@ -842,20 +982,20 @@ class App(tk.Tk):
 
     def _scan(self) -> None:
         self.scan_btn.configure(state="disabled")
-        self._log("Recherche en cours…")
+        self._log(t("Recherche en cours…"))
         self.engine.scan()
         self.after(11000, lambda: self.scan_btn.configure(state="normal"))
 
     def _toggle(self) -> None:
         if self.running:
-            self._log("Arrêt demandé.")
+            self._log(t("Arrêt demandé."))
             self.engine.stop()
             return
         address = self.address.get().split(" ")[0].strip()
         token = self.token.get().strip()
         if not token:
-            self._log("Il faut un jeton lichess (portée board:play). "
-                      "Crée-le ici : " + pb.TOKEN_URL)
+            self._log(t("Il faut un jeton lichess (portée board:play). "
+                        "Crée-le ici : {url}", url=pb.TOKEN_URL))
             return
         self.engine.start(address, token, self.save_token.get(),
                           self.flip.get(), led_settings=self.led_settings)
@@ -879,50 +1019,88 @@ class App(tk.Tk):
                         # gacherait le plaisir. La case reste a cocher a la main.
                         self.show_board.set(False)
                         self._toggle_board()
-                        noms = {pb.chess.WHITE: "blancs", pb.chess.BLACK: "noirs"}
-                        self.clock_bottom_name.configure(
-                            text="moi (" + noms.get(payload.get("moi"), "?") + ")")
-                        self.clock_top_name.configure(
-                            text=payload.get("opponent") or "adversaire")
                     self.state_snapshot = payload
-                    self._update_clock()
-                    # Les actions de partie n'ont de sens qu'en partie.
-                    for b in self.boutons_partie:
-                        b.state(["!disabled"] if payload.get("playing")
-                                else ["disabled"])
-                    self._draw_board(payload)
-                    self.status.configure(text=payload.get("status", ""))
-                    bits = []
-                    if payload.get("account"):
-                        bits.append(payload["account"])
-                    if payload.get("opponent"):
-                        bits.append("contre " + payload["opponent"])
-                    if payload.get("color"):
-                        bits.append("avec les " + payload["color"])
-                    if payload.get("moves"):
-                        bits.append(f"{payload['moves']} demi-coups")
-                    if payload.get("battery"):
-                        bits.append("batterie " + payload["battery"])
-                    gestes = payload.get("gestures") or []
-                    if gestes:
-                        titre = ("Recherche en cours — repose les pièces pour "
-                                 "annuler\n" if payload.get("seeking")
-                                 else "Soulève ces pièces, plateau au départ, "
-                                      "pour lancer une partie :\n")
-                        self.gestures.configure(
-                            text=titre + "\n".join("   " + g for g in gestes))
-                    self.detail.configure(text="  •  ".join(bits))
+                    self._apply_state(payload)
                 elif kind == "started":
                     self.running = True
-                    self.start_btn.configure(text="Arrêter")
-                    self.status.configure(text="Connexion au plateau…")
+                    self.start_btn.configure(text=t("Arrêter"))
+                    self.status.configure(text=t("Connexion au plateau…"))
                 elif kind == "stopped":
                     self.running = False
-                    self.start_btn.configure(text="Connecter")
-                    self.status.configure(text="Arrêté.")
+                    self.start_btn.configure(text=t("Connecter"))
+                    self.status.configure(text=t("Arrêté."))
         except queue.Empty:
             pass
         self.after(120, self._pump)
+
+    def _apply_state(self, payload: dict) -> None:
+        """Reporte un etat du pont sur les widgets."""
+        if payload.get("playing"):
+            noms = {pb.chess.WHITE: t("blancs"), pb.chess.BLACK: t("noirs")}
+            self.clock_bottom_name.configure(
+                text=t("moi ({color})", color=noms.get(payload.get("moi"), "?")))
+            self.clock_top_name.configure(
+                text=payload.get("opponent") or t("adversaire"))
+        self._update_clock()
+        # Les actions de partie n'ont de sens qu'en partie.
+        for b in self.boutons_partie:
+            b.state(["!disabled"] if payload.get("playing") else ["disabled"])
+        self._draw_board(payload)
+        self.status.configure(text=payload.get("status", ""))
+        bits = []
+        if payload.get("account"):
+            bits.append(payload["account"])
+        if payload.get("opponent"):
+            bits.append(t("contre {name}", name=payload["opponent"]))
+        if payload.get("color"):
+            bits.append(t("avec les {color}", color=t(payload["color"])))
+        if payload.get("moves"):
+            bits.append(t("{n} demi-coups", n=payload["moves"]))
+        if payload.get("battery"):
+            bits.append(t("batterie {level}", level=payload["battery"]))
+        gestes = payload.get("gestures") or []
+        if gestes:
+            titre = (t("Recherche en cours — repose les pièces pour annuler")
+                     if payload.get("seeking")
+                     else t("Soulève ces pièces, plateau au départ, pour "
+                            "lancer une partie :"))
+            self.gestures.configure(
+                text=titre + "\n" + "\n".join("   " + g for g in gestes))
+        self.detail.configure(text="  •  ".join(bits))
+
+    def _set_lang(self, _event=None) -> None:
+        """Change de langue : retenue pour la suite, appliquee tout de suite."""
+        lang = self.lang.get().lower()
+        if lang == pb.LANG:
+            return
+        pb.set_lang(lang)
+        pb.save_lang(lang)
+        self._rebuild()
+
+    def _rebuild(self) -> None:
+        """Reconstruit la fenetre dans la nouvelle langue, sans rien perdre.
+
+        Les editeurs ouverts se ferment avec elle ; le pont, lui, continue.
+        """
+        adresses = self.address.cget("values")
+        adresse = self.address.get()
+        self._token_text = self.token.get()
+        journal = self.log.get("1.0", "end-1c")
+        for child in self.winfo_children():
+            child.destroy()
+        self._build()
+        self.address.configure(values=adresses)
+        self.address.set(adresse)
+        self.log.configure(state="normal")
+        self.log.insert("end", journal + ("\n" if journal else ""))
+        self.log.see("end")
+        self.log.configure(state="disabled")
+        self._toggle_board()
+        if self.running:
+            self.start_btn.configure(text=t("Arrêter"))
+            self.status.configure(text=t("Connexion au plateau…"))
+        if self.state_snapshot:
+            self._apply_state(self.state_snapshot)
 
     def _log(self, line: str) -> None:
         self.log.configure(state="normal")
@@ -935,7 +1113,8 @@ class App(tk.Tk):
     def _game_action(self, nom: str) -> None:
         """Les actions qui engagent : on confirme celles qui ne reviennent pas."""
         if nom == "abandon" and not messagebox.askyesno(
-                "Abandonner", "Abandonner la partie en cours ?", parent=self):
+                t("Abandonner"), t("Abandonner la partie en cours ?"),
+                parent=self):
             return
         if nom == "refuser":
             # Un seul bouton pour les deux refus : lichess ignore celui qui
@@ -959,11 +1138,11 @@ class App(tk.Tk):
 
 def main() -> int:
     if tk is None:
-        print("Tk n'est pas disponible dans cet interpreteur Python : "
-              "l'interface graphique ne peut pas demarrer.\n"
-              "Sur Arch : sudo pacman -S tk\n"
-              "En attendant, le pont fonctionne en ligne de commande :\n"
-              "  pegasus_bridge.py play --address XX:XX:XX:XX:XX:XX",
+        print(t("Tk n'est pas disponible dans cet interpreteur Python : "
+                "l'interface graphique ne peut pas demarrer.\n"
+                "Sur Arch : sudo pacman -S tk\n"
+                "En attendant, le pont fonctionne en ligne de commande :\n"
+                "  pegasus_bridge.py play --address XX:XX:XX:XX:XX:XX"),
               file=sys.stderr)
         return 1
     if chess is None:

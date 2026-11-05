@@ -8,6 +8,8 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import chess
 import pegasus_bridge as pb
 
+pb.set_lang("fr")      # les controles lisent les messages francais
+
 FAIL = []
 
 
@@ -1602,3 +1604,48 @@ async def base_interrupts():
 
 
 asyncio.run(base_interrupts())
+
+print("\n== langue : chaque message du pont a sa version anglaise ==")
+
+
+def lang_coverage():
+    import ast
+    import io
+    import logging
+    with open(pb.__file__, encoding="utf-8") as handle:
+        arbre = ast.parse(handle.read())
+    bruts = {"%s", "BLE <- %s", "LED -> %s", "trame 0x%02x  len=%d  %s"}
+    manquants = []
+    for n in ast.walk(arbre):
+        if not (isinstance(n, ast.Call) and n.args
+                and isinstance(n.args[0], ast.Constant)
+                and isinstance(n.args[0].value, str)):
+            continue
+        f = n.func
+        journal = (isinstance(f, ast.Attribute) and f.attr in ("info", "warning", "error")
+                   and getattr(f.value, "id", None) == "LOG")
+        if (journal or getattr(f, "id", None) == "tr") \
+                and n.args[0].value not in pb.EN | dict.fromkeys(bruts):
+            manquants.append(n.args[0].value)
+    check(not manquants, "aucun message sans traduction"
+          + (f" (manquants : {manquants})" if manquants else ""))
+
+    flux = io.StringIO()
+    h = logging.StreamHandler(flux)
+    pb.LOG.addHandler(h)
+    try:
+        pb.set_lang("en")
+        pb.LOG.warning("partie %s : vous jouez les %s, reprise au demi-coup %d",
+                       "abcd", "noirs", 4)
+        check(flux.getvalue().strip()
+              == "game abcd: you play black, resuming at half-move 4",
+              "le journal passe en anglais, arguments compris")
+        check(pb.tr("Plateau a corriger : {n} case(s)", n=2)
+              == "Board to fix: 2 square(s)", "tr() traduit et remplit")
+    finally:
+        pb.set_lang("fr")
+        pb.LOG.removeHandler(h)
+    check(pb.tr("A toi de jouer") == "A toi de jouer", "retour au francais")
+
+
+lang_coverage()

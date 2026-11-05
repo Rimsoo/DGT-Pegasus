@@ -50,6 +50,312 @@ from typing import Dict, List, Optional, Sequence, Set, Tuple
 LOG = logging.getLogger("pegasus")
 
 # ---------------------------------------------------------------------------
+# Langue : francais (la langue du code) ou anglais
+# ---------------------------------------------------------------------------
+# Les messages restent ecrits en francais dans le code ; EN donne leur
+# traduction, cle = le texte francais exact. Un filtre sur LOG traduit les
+# journaux au vol (gabarit et arguments), tr() sert pour le reste.
+
+SETTINGS_PATH = os.path.join(
+    os.environ.get("XDG_CONFIG_HOME", os.path.expanduser("~/.config")),
+    "pegasus-bridge", "settings.json")
+LANGS = ("fr", "en")
+LANG = "fr"
+
+EN: Dict[str, str] = {
+    # -- journal de la partie
+    "scan BLE (%.0f s) ...": "BLE scan (%.0f s) ...",
+    "scan BLE pendant %.0f s ...": "BLE scan for %.0f s ...",
+    "recherche de %s ...": "looking for %s ...",
+    "candidat : %s  %s  rssi=%s  uuid=%s": "candidate: %s  %s  rssi=%s  uuid=%s",
+    "(sans nom)": "(no name)",
+    "connexion a %s ...": "connecting to %s ...",
+    "connecte": "connected",
+    "handshake desactive": "handshake disabled",
+    "handshake : sequence « %s »": "handshake: “%s” sequence",
+    "handshake termine": "handshake done",
+    "service %s": "service %s",
+    "   caracteristique %s  %s": "   characteristic %s  %s",
+    "numero de serie : %s": "serial number: %s",
+    "numero de serie long : %s": "long serial number: %s",
+    "firmware %d.%d%s": "firmware %d.%d%s",
+    "  (major=1 -> Pegasus confirme)": "  (major=1 -> Pegasus confirmed)",
+    "trademark : %s": "trademark: %s",
+    "version materielle %d.%d": "hardware version %d.%d",
+    "reponse 0xa3 : %s": "0xa3 response: %s",
+    "(vide)": "(empty)",
+    "ETAT DE VERROUILLAGE (0xa4) : %s%s": "LOCK STATE (0xa4): %s%s",
+    "  -> 0 = deverrouillee": "  -> 0 = unlocked",
+    "  -> NON NULLE : la carte se considere verrouillee":
+        "  -> NON-ZERO: the board considers itself locked",
+    "cle developpeur acceptee (0xa5 01)": "developer key accepted (0xa5 01)",
+    "reponse a la cle developpeur : %s  <- si la carte refuse la cle, elle "
+    "repond aux questions d'identite mais ne livre pas l'occupation reelle":
+        "developer key response: %s  <- if the board refuses the key, it answers "
+        "identity queries but does not report real occupancy",
+    "batterie : %s": "battery: %s",
+    "board dump tronque (%d octets)": "truncated board dump (%d bytes)",
+    "board dump : %d/64 cases occupees, valeurs presentes : %s":
+        "board dump: %d/64 squares occupied, values present: %s",
+    "dump suspect (64 cases occupees, aucun zero) : la carte ne renvoie pas "
+    "d'occupation reelle -> ignore. Lancez `raw` pour voir les octets bruts, "
+    "ou --accept-weird-dumps pour le prendre quand meme.":
+        "suspicious dump (64 squares occupied, no zero): the board is not "
+        "reporting real occupancy -> ignored. Run `raw` to see the raw bytes, "
+        "or --accept-weird-dumps to accept it anyway.",
+    "aucun field update apres %.0f s -> scrutation des dumps toutes les %.2f s":
+        "no field update after %.0f s -> polling dumps every %.2f s",
+    "lien BLE perdu": "BLE link lost",
+    "jeton enregistre dans %s (lisible par vous seul)":
+        "token saved to %s (readable by you only)",
+    "connecte a lichess en tant que %s": "connected to lichess as %s",
+    "suivi de la partie %s": "following game %s",
+    "flux %s interrompu (%s), reprise dans 3 s":
+        "stream %s interrupted (%s), retrying in 3 s",
+    "partie %s : vous jouez les %s, reprise au demi-coup %d":
+        "game %s: you play %s, resuming at half-move %d",
+    "blancs": "white",
+    "noirs": "black",
+    "coup %s illisible dans l'historique lichess":
+        "unreadable move %s in the lichess history",
+    "partie terminee%s. Le plateau est ignore jusqu'a la prochaine partie : "
+    "range tes pieces tranquillement.":
+        "game over%s. The board is ignored until the next game: put your "
+        "pieces away at your leisure.",
+    "aucune partie en cours : « %s » sans effet":
+        "no game in progress: “%s” has no effect",
+    "action inconnue : %s": "unknown action: %s",
+    "lichess refuse l'ajout de temps : ce jeton n'a que le droit « board:play ». "
+    "Ajoute « challenge:write » a ton jeton pour ce bouton.":
+        "lichess refuses to add time: this token only has the “board:play” "
+        "scope. Add “challenge:write” to your token for this button.",
+    "« %s » refuse par lichess : %s": "“%s” refused by lichess: %s",
+    "abandon envoye": "resignation sent",
+    "partie annulee": "game aborted",
+    "nulle proposee ou acceptee": "draw offered or accepted",
+    "nulle refusee": "draw declined",
+    "reprise de coup proposee ou acceptee": "takeback offered or accepted",
+    "reprise refusee": "takeback declined",
+    "victoire reclamee": "victory claimed",
+    "{n} s ajoutees a la pendule de l'adversaire":
+        "{n} s added to the opponent's clock",
+    "le plateau ne correspond pas a la partie : %d case(s) a corriger. "
+    "En trop : %s. Manquant : %s.":
+        "the board doesn't match the game: %d square(s) to fix. "
+        "Extra: %s. Missing: %s.",
+    "reprise de coup sur lichess : %d demi-coup(s) annule(s), remettez les "
+    "pieces comme avant":
+        "takeback on lichess: %d half-move(s) undone, put the pieces back as "
+        "they were",
+    "coup joue sur le plateau alors que ce n'est pas votre tour : %s":
+        "move played on the board while it isn't your turn: %s",
+    "plateau et partie ne se recoupent plus (plateau %d demi-coups, partie %d) "
+    "-> reposez la position de la partie telle qu'elle est affichee sur lichess":
+        "board and game no longer match (board %d half-moves, game %d) "
+        "-> set up the game position as shown on lichess",
+    "envoi du coup %s a lichess": "sending move %s to lichess",
+    "lichess refuse %s (%s) : rejouez le coup sur le plateau":
+        "lichess refuses %s (%s): play the move again on the board",
+    "envoi de %s impossible : %s": "could not send %s: %s",
+    # -- suivi du plateau
+    "piece posee sur %s sans origine connue -> suppose pion blanc (reposez la "
+    "position de depart pour resynchroniser)":
+        "piece placed on %s with no known origin -> assumed white pawn (set up "
+        "the starting position to resync)",
+    "position retablie, la partie reprend": "position restored, the game resumes",
+    "identites recalees sur la partie suivie":
+        "piece identities realigned with the followed game",
+    "coup adverse rejoue : %s": "opponent's move played back: %s",
+    "le coup attendu n'est pas encore realise. En trop : %s. Manquant : %s.":
+        "the expected move isn't complete yet. Extra: %s. Missing: %s.",
+    "coup detecte : %s": "move detected: %s",
+    "position de depart detectee -> nouvelle partie":
+        "starting position detected -> new game",
+    "position impossible a expliquer par un coup legal. En trop : %s. "
+    "Manquant : %s. Remettez ces pieces en place, la partie reprendra toute "
+    "seule.":
+        "position can't be explained by a legal move. Extra: %s. Missing: %s. "
+        "Put these pieces back, the game will resume by itself.",
+    "promotion supposee en %s": "promotion assumed to %s",
+    "plusieurs coups donnent cette position : %s. Levez puis reposez la piece "
+    "d'arrivee pour lever le doute.":
+        "several moves lead to this position: %s. Lift and put down the "
+        "destination piece to resolve it.",
+    # -- lumieres et gestes
+    "%s illisible (%s), reglages lumineux par defaut":
+        "%s unreadable (%s), default light settings",
+    "impossible d'ecrire %s : %s": "could not write %s: %s",
+    "gestes de lancement par defaut ecrits dans %s":
+        "default start gestures written to %s",
+    "%s illisible (%s), gestes par defaut": "%s unreadable (%s), default gestures",
+    "geste « %s » : cases illisibles %r": "gesture “%s”: unreadable squares %r",
+    "geste « %s » : ces cases sont vides en position initiale, il ne pourra "
+    "jamais se declencher":
+        "gesture “%s”: these squares are empty in the starting position, it can "
+        "never fire",
+    "geste : %s": "gesture: %s",
+    "les gestes sont desactives (--no-gestures)":
+        "gestures are disabled (--no-gestures)",
+    "aucun geste n'est defini": "no gesture is defined",
+    "le plateau n'est pas en position de depart : {squares} ne devrai(en)t pas "
+    "etre occupee(s)":
+        "the board isn't in the starting position: {squares} should not be "
+        "occupied",
+    "cases levees : {lifted} — aucun geste ne correspond (connus : {known})":
+        "lifted squares: {lifted} — no gesture matches (known: {known})",
+    "geste reconnu : %s": "gesture recognised: %s",
+    "partie contre l'ordinateur demandee": "game against the computer requested",
+    "impossible de lancer la partie : %s": "could not start the game: %s",
+    "recherche d'un adversaire : %s %s+%s%s": "seeking an opponent: %s %s+%s%s",
+    "classee": "rated",
+    "amicale": "casual",
+    " — repose les pieces pour annuler": " — put the pieces back to cancel",
+    "recherche annulee%s": "seek cancelled%s",
+    "pieces reposees": "pieces put back",
+    # -- port serie et LiveChess (mode serve)
+    "port serie sature, message perdu": "serial port saturated, message lost",
+    "ecriture sur le port serie impossible : %s": "could not write to serial port: %s",
+    "serie <- %s": "serial <- %s",
+    "serie -> %s": "serial -> %s",
+    "LiveChess a ouvert le port et commence a parler":
+        "LiveChess opened the port and started talking",
+    "LiveChess passe en mode bus (adresse %d)":
+        "LiveChess switches to bus mode (address %d)",
+    "LiveChess demande la version en mode bus -> on repond":
+        "LiveChess asks for the version in bus mode -> answering",
+    "LiveChess marque le debut de partie": "LiveChess marks the start of the game",
+    "retour au mode simple": "back to simple mode",
+    "commande bus inconnue : 0x%02x": "unknown bus command: 0x%02x",
+    "LiveChess demande le mode bus (0x4a)": "LiveChess requests bus mode (0x4a)",
+    "LiveChess : mode update (0x43)": "LiveChess: update mode (0x43)",
+    "LiveChess : mode update board (0x44)": "LiveChess: update board mode (0x44)",
+    "LiveChess : mode update nice (0x4b)": "LiveChess: update nice mode (0x4b)",
+    "commande bootloader (0x4e) ignoree": "bootloader command (0x4e) ignored",
+    "impossible de changer les droits de %s : %s":
+        "could not change permissions of %s: %s",
+    "%s appartient maintenant a %s": "%s now belongs to %s",
+    "impossible de donner %s a %s : %s": "could not give %s to %s: %s",
+    "droits sur %s : %s uid=%d gid=%d": "permissions on %s: %s uid=%d gid=%d",
+    "droits sur %s : %s": "permissions on %s: %s",
+    "lien symbolique %s -> %s": "symlink %s -> %s",
+    "lien symbolique %s -> %s (a ouvrir dans LiveChess)":
+        "symlink %s -> %s (to open in LiveChess)",
+    "impossible de creer %s : %s": "could not create %s: %s",
+    "%s n'est pas un tty configurable (%s), on continue":
+        "%s is not a configurable tty (%s), continuing",
+    "--link avec --device demande --peer (l'autre bout de la paire, que "
+    "LiveChess doit ouvrir)":
+        "--link with --device requires --peer (the other end of the pair, which "
+        "LiveChess must open)",
+    "LiveChess doit ouvrir l'autre bout de la paire : %s":
+        "LiveChess must open the other end of the pair: %s",
+    "aucun octet recu apres %.0f s : LiveChess n'a pas ouvert %s. Le pty est "
+    "recree a chaque demarrage du pont, donc LiveChess doit etre lance APRES "
+    "lui, et le port doit etre selectionne dans son interface.":
+        "no byte received after %.0f s: LiveChess hasn't opened %s. The pty is "
+        "recreated every time the bridge starts, so LiveChess must be launched "
+        "AFTER it, and the port must be selected in its interface.",
+    # -- arrets
+    "aucun peripherique BLE a l'adresse {address}":
+        "no BLE device at address {address}",
+    "aucun Pegasus trouve. Verifiez qu'il est allume, pas deja connecte a un "
+    "telephone, et lancez `pegasus_bridge.py scan` pour voir ce que "
+    "l'adaptateur percoit.":
+        "no Pegasus found. Check that it is switched on, not already connected "
+        "to a phone, and run `pegasus_bridge.py scan` to see what the adapter "
+        "picks up.",
+    "aucun jeton lichess.\n"
+    "  1. cree-en un ici (porte « board:play » deja cochee) :\n"
+    "     {url}\n"
+    "  2. relance avec :  --token <jeton> --save-token\n"
+    "     (il sera range dans {path}, lisible par toi seul)":
+        "no lichess token.\n"
+        "  1. create one here (“board:play” scope already ticked):\n"
+        "     {url}\n"
+        "  2. run again with:  --token <token> --save-token\n"
+        "     (it will be stored in {path}, readable by you only)",
+    "jeton refuse par lichess (401). Il a peut-etre expire, ou il lui manque la "
+    "porte « board:play ».":
+        "token refused by lichess (401). It may have expired, or it lacks the "
+        "“board:play” scope.",
+    "lichess repond {code}": "lichess answers {code}",
+    "lichess injoignable : {error}": "lichess unreachable: {error}",
+    # -- etat, pour l'interface
+    "En attente d'une partie sur lichess": "Waiting for a game on lichess",
+    "Partie terminee — range les pieces, la suivante viendra":
+        "Game over — put the pieces away, the next one will come",
+    "Plateau a corriger : {n} case(s)": "Board to fix: {n} square(s)",
+    "Rejoue le coup adverse (cases allumees)":
+        "Play the opponent's move (lit squares)",
+    "A toi de jouer": "Your move",
+    "En attente de l'adversaire": "Waiting for the opponent",
+    "en charge": "charging",
+    "{h} h {m:02d} restantes": "{h} h {m:02d} left",
+}
+
+
+def tr(text: str, **kw) -> str:
+    """Le texte dans la langue choisie, avec ses champs {…} remplis."""
+    if LANG == "en":
+        text = EN.get(text, text)
+    return text.format(**kw) if kw else text
+
+
+def default_lang() -> str:
+    """La langue enregistree, sinon celle du systeme (anglais hors francais)."""
+    try:
+        with open(SETTINGS_PATH, encoding="utf-8") as handle:
+            lang = json.load(handle).get("lang")
+        if lang in LANGS:
+            return lang
+    except (OSError, ValueError, AttributeError):
+        pass
+    env = os.environ.get("LC_ALL") or os.environ.get("LC_MESSAGES") \
+        or os.environ.get("LANG") or ""
+    return "fr" if env.lower().startswith("fr") else "en"
+
+
+def set_lang(lang: Optional[str]) -> str:
+    global LANG
+    LANG = lang if lang in LANGS else default_lang()
+    return LANG
+
+
+def save_lang(lang: str) -> bool:
+    """Retient la langue dans settings.json, sans toucher aux autres cles."""
+    try:
+        with open(SETTINGS_PATH, encoding="utf-8") as handle:
+            data = json.load(handle)
+        if not isinstance(data, dict):
+            data = {}
+    except (OSError, ValueError):
+        data = {}
+    data["lang"] = lang
+    try:
+        os.makedirs(os.path.dirname(SETTINGS_PATH), exist_ok=True)
+        with open(SETTINGS_PATH, "w", encoding="utf-8") as handle:
+            json.dump(data, handle, indent=2)
+        return True
+    except OSError:
+        return False
+
+
+class _TranslateLog(logging.Filter):
+    """Traduit le gabarit et les arguments textuels d'un message du pont."""
+
+    def filter(self, record: logging.LogRecord) -> bool:
+        if LANG == "en" and isinstance(record.msg, str):
+            record.msg = EN.get(record.msg, record.msg)
+            if isinstance(record.args, tuple):
+                record.args = tuple(EN.get(a, a) if isinstance(a, str) else a
+                                    for a in record.args)
+        return True
+
+
+LOG.addFilter(_TranslateLog())
+set_lang(None)
+
+# ---------------------------------------------------------------------------
 # Cote BLE : constantes Pegasus
 # ---------------------------------------------------------------------------
 
@@ -1095,7 +1401,8 @@ async def find_board(address: Optional[str], name: Optional[str], timeout: float
         LOG.info("recherche de %s ...", address)
         dev = await BleakScanner.find_device_by_address(address, timeout=timeout)
         if dev is None:
-            raise SystemExit(f"aucun peripherique BLE a l'adresse {address}")
+            raise SystemExit(tr("aucun peripherique BLE a l'adresse {address}",
+                                address=address))
         return dev
 
     LOG.info("scan BLE (%.0f s) ...", timeout)
@@ -1114,11 +1421,11 @@ async def find_board(address: Optional[str], name: Optional[str], timeout: float
             if best is None or by_uuid:
                 best = dev
     if best is None:
-        raise SystemExit(
+        raise SystemExit(tr(
             "aucun Pegasus trouve. Verifiez qu'il est allume, pas deja connecte "
             "a un telephone, et lancez `pegasus_bridge.py scan` pour voir ce que "
             "l'adaptateur percoit."
-        )
+        ))
     return best
 
 
@@ -1342,10 +1649,10 @@ class PegasusLink:
             return ""
         parts = [f"{self.battery['percent']} %"]
         if self.battery["charging"]:
-            parts.append("en charge")
+            parts.append(tr("en charge"))
         elif self.battery["left"]:
             hours, minutes = self.battery["left"]
-            parts.append(f"{hours} h {minutes:02d} restantes")
+            parts.append(tr("{h} h {m:02d} restantes", h=hours, m=minutes))
         return " ".join(parts)
 
     async def request_battery(self) -> None:
@@ -1807,6 +2114,9 @@ def add_global_flags(sp) -> None:
     sp.add_argument("--debug-ble", action="store_true",
                     default=argparse.SUPPRESS,
                     help="ne pas taire les journaux bleak / dbus")
+    sp.add_argument("--lang", choices=LANGS, default=argparse.SUPPRESS,
+                    help="langue des messages (fr ou en ; par defaut celle "
+                         "enregistree, sinon celle du systeme)")
 
 
 # ---------------------------------------------------------------------------
@@ -2252,16 +2562,17 @@ class PlaySession:
     def status_line(self) -> str:
         """Une phrase decrivant l'etat courant, pour l'interface."""
         if self.game_id is None:
-            return "En attente d'une partie sur lichess"
+            return tr("En attente d'une partie sur lichess")
         if self.finished:
-            return "Partie terminee — range les pieces, la suivante viendra"
+            return tr("Partie terminee — range les pieces, la suivante viendra")
         if not self.tracker.in_sync:
             extra, missing = self.tracker.mismatch()
-            return f"Plateau a corriger : {len(extra) + len(missing)} case(s)"
+            return tr("Plateau a corriger : {n} case(s)",
+                      n=len(extra) + len(missing))
         if self.lit:
-            return "Rejoue le coup adverse (cases allumees)"
+            return tr("Rejoue le coup adverse (cases allumees)")
         mine = self.tracker.logic.turn == self.color
-        return "A toi de jouer" if mine else "En attente de l'adversaire"
+        return tr("A toi de jouer" if mine else "En attente de l'adversaire")
 
     def start_board(self) -> "chess.Board":
         if self.initial_fen in ("startpos", "", None):
@@ -2332,7 +2643,7 @@ class PlaySession:
     # releve d'un autre droit : si lichess refuse, on le dit franchement au
     # lieu de laisser croire que ca a marche.
     ACTIONS = {
-        "abandon":       ("/api/board/game/{id}/resign", "abandon"),
+        "abandon":       ("/api/board/game/{id}/resign", "abandon envoye"),
         "annuler":       ("/api/board/game/{id}/abort", "partie annulee"),
         "nulle":         ("/api/board/game/{id}/draw/yes",
                           "nulle proposee ou acceptee"),
@@ -2352,7 +2663,8 @@ class PlaySession:
             return False
         if nom == "temps":
             chemin = f"/api/round/{self.game_id}/add-time/{int(seconds)}"
-            dit = f"{int(seconds)} s ajoutees a la pendule de l'adversaire"
+            dit = tr("{n} s ajoutees a la pendule de l'adversaire",
+                     n=int(seconds))
         elif nom in self.ACTIONS:
             gabarit, dit = self.ACTIONS[nom]
             chemin = gabarit.format(id=self.game_id)
@@ -2718,21 +3030,23 @@ class Launcher:
         levees qui ne correspondent a rien, ou les gestes qui dorment.
         """
         if not self.enabled:
-            return "les gestes sont desactives (--no-gestures)"
+            return tr("les gestes sont desactives (--no-gestures)")
         if not self.gestures:
-            return "aucun geste n'est defini"
+            return tr("aucun geste n'est defini")
         extra = self.tracker.occ - self.start_occ
         missing = self.start_occ - self.tracker.occ
         if extra:
-            return ("le plateau n'est pas en position de depart : "
-                    + ", ".join(chess.square_name(s) for s in sorted(extra))
-                    + " ne devrai(en)t pas etre occupee(s)")
+            return tr("le plateau n'est pas en position de depart : "
+                      "{squares} ne devrai(en)t pas etre occupee(s)",
+                      squares=", ".join(chess.square_name(s)
+                                        for s in sorted(extra)))
         if not missing:
             return None                  # position complete : rien a signaler
         leve = ", ".join(chess.square_name(s) for s in sorted(missing))
         if self.match() is None:
-            return (f"cases levees : {leve} — aucun geste ne correspond "
-                    f"(connus : {'; '.join(self.describe())})")
+            return tr("cases levees : {lifted} — aucun geste ne correspond "
+                      "(connus : {known})",
+                      lifted=leve, known="; ".join(self.describe()))
         return None
 
     def _report(self) -> None:
@@ -2844,7 +3158,7 @@ class Launcher:
                 resp.close()          # fermer la connexion annule la recherche
             except Exception:
                 pass
-        LOG.info("recherche annulee%s", f" ({raison})" if raison else "")
+        LOG.info("recherche annulee%s", f" ({tr(raison)})" if raison else "")
         await self.clear_leds()
 
     async def clear_leds(self) -> None:
@@ -2973,12 +3287,13 @@ async def cmd_play(args, on_update=None) -> int:
 
     token = load_token(args.token)
     if not token:
-        raise SystemExit(
+        raise SystemExit(tr(
             "aucun jeton lichess.\n"
             "  1. cree-en un ici (porte « board:play » deja cochee) :\n"
-            f"     {TOKEN_URL}\n"
+            "     {url}\n"
             "  2. relance avec :  --token <jeton> --save-token\n"
-            f"     (il sera range dans {TOKEN_PATH}, lisible par toi seul)")
+            "     (il sera range dans {path}, lisible par toi seul)",
+            url=TOKEN_URL, path=TOKEN_PATH))
     if args.save_token:
         save_token(token)
 
@@ -2987,11 +3302,11 @@ async def cmd_play(args, on_update=None) -> int:
         me = await asyncio.to_thread(api.get_json, "/api/account")
     except urllib.error.HTTPError as exc:
         if exc.code == 401:
-            raise SystemExit("jeton refuse par lichess (401). Il a peut-etre "
-                             "expire, ou il lui manque la porte « board:play ».")
-        raise SystemExit(f"lichess repond {exc.code}")
+            raise SystemExit(tr("jeton refuse par lichess (401). Il a peut-etre "
+                                "expire, ou il lui manque la porte « board:play »."))
+        raise SystemExit(tr("lichess repond {code}", code=exc.code))
     except Exception as exc:
-        raise SystemExit(f"lichess injoignable : {exc}")
+        raise SystemExit(tr("lichess injoignable : {error}", error=exc))
     my_id = me.get("id", "")
     LOG.info("connecte a lichess en tant que %s", me.get("username", my_id))
 
@@ -3214,6 +3529,7 @@ def build_parser() -> argparse.ArgumentParser:
     )
     p.add_argument("-v", "--verbose", action="store_true", help="logs detailles")
     p.add_argument("--debug", action="store_true", help="trace tous les octets serie")
+    p.add_argument("--lang", choices=LANGS, help="langue des messages (fr ou en)")
     sub = p.add_subparsers(dest="cmd", required=True)
 
     def common(sp):
@@ -3393,6 +3709,7 @@ def main(argv: Optional[List[str]] = None) -> int:
     args = build_parser().parse_args(argv)
     args.verbose = getattr(args, "verbose", False)
     args.debug = getattr(args, "debug", False)
+    set_lang(getattr(args, "lang", None))
     logging.basicConfig(
         level=logging.DEBUG if (args.verbose or args.debug) else logging.INFO,
         format="%(asctime)s %(levelname)-7s %(message)s",
