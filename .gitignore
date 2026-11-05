@@ -1,0 +1,7 @@
+# Produits de construction : l'AppImage se distribue par les releases
+*.AppImage
+build/
+*.egg-info/
+.build-venv/
+__pycache__/
+*.pyc
