@@ -1,5 +1,9 @@
 # Pegasus — jouer sur lichess avec un DGT Pegasus, sous Linux
 
+> [!NOTE]
+> Dépôt principal : [Forgejo](https://forgejo.aaaoz.fr/Rimso/DGT-Pegasus) · Miroir : [GitHub](https://github.com/Rimsoo/DGT-Pegasus) (synchronisé automatiquement).
+> Les issues et retours sont les bienvenus sur GitHub.
+
 DGT ne fournit qu'un `.deb` de LiveChess pour Linux, et LiveChess ne voit pas un
 plateau connecté en Bluetooth : il énumère les ports série. Ce projet se passe
 des deux. Il parle directement au Pegasus en BLE et à lichess par son API Board.
