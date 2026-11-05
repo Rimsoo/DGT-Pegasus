@@ -58,7 +58,7 @@ access — once. Bluetooth goes through the system's BlueZ: nothing to bundle, b
 
 The second installs without sudo: a `pegasus` command in `~/.local/bin`, the
 icon in the theme, a menu entry. It delegates to
-[shortcut](https://github.com/Rimsoo/shortcut) if it is on the PATH, and does
+[shortcut](https://forgejo.aaaoz.fr/Rimso/shortcut) if it is on the PATH, and does
 the same thing by hand otherwise.
 
 ### B. From source
