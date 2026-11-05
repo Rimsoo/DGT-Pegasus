@@ -1,0 +1,28 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  tests:
+    name: Tests (Python ${{ matrix.python }})
+    runs-on: docker
+    strategy:
+      matrix:
+        python: ['3.9', '3.13']   # oldest supported + current
+    container:
+      image: python:${{ matrix.python }}-bookworm
+    steps:
+      - name: Checkout
+        run: |
+          git clone "${{ github.server_url }}/${{ github.repository }}.git" .
+          git checkout -q "${{ github.sha }}"
+
+      - name: Install
+        run: pip install --quiet .
+
+      - name: Run tests
+        run: python test_pegasus_bridge.py
